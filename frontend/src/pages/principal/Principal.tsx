@@ -53,7 +53,6 @@ export default function Principal() {
 
         try {
             setDeletar(true);
-            console.log("Tentando deletar paciente com sequsuario:", selectedPaciente.sequsuario);
             const respostaIpc = await window.ipc.deletarUsuario(selectedPaciente.sequsuario!);
 
             if (respostaIpc.sucesso) {
@@ -74,8 +73,6 @@ export default function Principal() {
     useEffect(() => {
         carregarPacientes();
     }, []);
-
-    console.log("Pacientes carregados:", pacientes);
 
     return (
         <div className="h-screen flex flex-col text-gray-800 overflow-hidden">
@@ -150,14 +147,14 @@ export default function Principal() {
                 )}
             />
 
-            <FichaPaciente
-                open={openFicha}
-                onOpenChange={setOpenFicha}
-                paciente={selectedPaciente}
-                onEdit={() => {
-                    setOpen(true);
-                }}
-            />
+            {openFicha && selectedPaciente && (
+                <FichaPaciente
+                    open={openFicha}
+                    onOpenChange={setOpenFicha}
+                    paciente={selectedPaciente}
+                    onEdit={() => setOpen(true)}
+                />
+            )}
 
         </div>
     );

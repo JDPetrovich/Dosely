@@ -5,8 +5,6 @@ export async function iniciarMonitoramentoRealtime() {
     const supabase = getSupabase();
     const db = getDatabase();
 
-    console.log("Iniciando sincronização e monitoramento...");
-
     try {
         const { data, error } = await supabase
             .from('historico_remedios')

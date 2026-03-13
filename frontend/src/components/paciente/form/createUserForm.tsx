@@ -64,12 +64,16 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
   async function handleFormSubmit(data: UsuarioFormOutput) {
     try {
       setLoading(true);
-      const payload = { ...data, cpfusuario: data.cpfusuario.replace(/\D/g, "") };
+      const payload = {
+        ...data,
+        cpfusuario: data.cpfusuario.replace(/\D/g, ""),
+        telusuario: data.telusuario?.replace(/\D/g, ''),
+      };
 
       await onSave(payload);
 
       onSuccess?.();
-      reset();
+      if (!paciente) reset();
     } catch (error) {
       console.error("Erro no formulário:", error);
     } finally {
