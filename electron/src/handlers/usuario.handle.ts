@@ -35,6 +35,7 @@ export async function usuariohandle() {
 
     ipcMain.handle("criar-usuario", async (_, dadosUsuario: IUsuario) => {
         try {
+            console.log("Dados recebidos para criação:", dadosUsuario);
             await repo.criarUsuario(dadosUsuario);
             return prepararRespostaUsuario([], true, "Usuário criado com sucesso!");
         } catch (error) {

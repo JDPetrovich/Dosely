@@ -6,9 +6,11 @@ import { AddPacienteCard } from "@/components/paciente/card/addPacienteCard";
 import { PacienteCard } from "@/components/paciente/card/pacienteCard";
 import { CreatePacienteModal } from "@/components/paciente/modal/createPacienteModal";
 import { ConfirmModal } from "@/components/paciente/modal/confirmModal";
+import { FichaPaciente } from "@/components/paciente/modal/fichaPaciente";
 
 export default function Principal() {
     const [open, setOpen] = useState(false);
+    const [openFicha, setOpenFicha] = useState(false);
     const [pacientes, setPacientes] = useState<UsuarioFormInput[]>([]);
     const [selectedPaciente, setSelectedPaciente] = useState<UsuarioFormInput | null>(null);
     const [modalConfirm, setModalConfirm] = useState(false);
@@ -51,6 +53,7 @@ export default function Principal() {
 
         try {
             setDeletar(true);
+            console.log("Tentando deletar paciente com sequsuario:", selectedPaciente.sequsuario);
             const respostaIpc = await window.ipc.deletarUsuario(selectedPaciente.sequsuario!);
 
             if (respostaIpc.sucesso) {
@@ -72,11 +75,13 @@ export default function Principal() {
         carregarPacientes();
     }, []);
 
+    console.log("Pacientes carregados:", pacientes);
+
     return (
         <div className="h-screen flex flex-col text-gray-800 overflow-hidden">
             <Header />
 
-            <main className="flex-1 flex flex-col items-center gap-6 mt-16 p-6 overflow-hidden">
+            <main className="flex-1 flex flex-col items-center gap-6 p-6 overflow-hidden">
                 <h1 className="text-3xl font-semibold text-slate-800">
                     Seja bem-vindo
                 </h1>
@@ -104,11 +109,11 @@ export default function Principal() {
                                 <PacienteCard
                                     key={index}
                                     nome={p.nomeusuario}
-                                    idade={p.idadeusuario}
+                                    dtnascimentousuario={p.dtnascimentousuario}
                                     cpf={p.cpfusuario}
                                     onClick={() => {
-                                        console.log("Abrir detalhes do paciente");
-                                        // aqui vai navegar para a página de detalhes
+                                        setSelectedPaciente(p);
+                                        setOpenFicha(true);
                                     }}
                                     onEdit={() => {
                                         setSelectedPaciente(p);
@@ -144,6 +149,16 @@ export default function Principal() {
                     </span>
                 )}
             />
+
+            <FichaPaciente
+                open={openFicha}
+                onOpenChange={setOpenFicha}
+                paciente={selectedPaciente}
+                onEdit={() => {
+                    setOpen(true);
+                }}
+            />
+
         </div>
     );
 }

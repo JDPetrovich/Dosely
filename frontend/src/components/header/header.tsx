@@ -19,7 +19,8 @@ export function Header() {
 
     const menuItems = [
         { label: "Principal", path: "/principal" },
-        { label: "Remédios", path: "/remedios" },
+       /*  { label: "Teste", path: "/teste" }, */
+        { label: "Remédios", path: "/remedio" },
     ]
 
     const location = useLocation()
@@ -39,7 +40,7 @@ export function Header() {
     }
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b border-gray-200 shadow-sm px-6 h-16">
+        <header className="bg-white/80  border-b border-gray-200 px-6 h-16 mb-3">
             <div className="max-w-7xl mx-auto h-full grid grid-cols-3 items-center">
 
                 <div className="flex justify-start items-center gap-2">

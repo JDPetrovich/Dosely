@@ -1,8 +1,10 @@
 export default interface ITelaUsuario {
     sequsuario: number,
     nomeusuario: string,
-    idadeusuario: number,
+    dtnascimentousuario: string,
     codusuario: string,
     cpfusuario: string,
+    telusuario?: string,
+    emailusuario?: string
 }
 

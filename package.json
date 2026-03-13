@@ -1,19 +1,19 @@
 {
-  "name": "desktop_base",
+  "name": "controll_med",
   "version": "1.0.0",
   "description": "",
   "main": "electron/dist/main.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Sars-Desenvolvimento-de-Software/desktop_base.git"
+    "url": "git+https://github.com/JDPetrovich/Controll-Med.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Sars-Desenvolvimento-de-Software/desktop_base/issues"
+    "url": "https://github.com/JDPetrovich/Controll-Med/issues"
   },
-  "homepage": "https://github.com/Sars-Desenvolvimento-de-Software/desktop_base",
+  "homepage": "https://github.com/JDPetrovich/Controll-Med",
   "type": "module",
   "scripts": {
     "dev:frontend": "npm --prefix frontend run dev",
@@ -42,12 +42,12 @@
     "electron": "^39.0.0",
     "electron-devtools-installer": "^4.0.0",
     "tsx": "^4.21.0",
-    "typescript": "^4.9.5",
+    "typescript": "^5.9.3",
     "wait-on": "^9.0.1"
   },
   "build": {
     "appId": "br.com.controllMed.",
-    "productName": "",
+    "productName": "ControllMed",
     "directories": {
       "buildResources": "build",
       "output": "release"

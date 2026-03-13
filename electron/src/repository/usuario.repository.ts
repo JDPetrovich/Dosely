@@ -11,10 +11,12 @@ class UsuarioRepository {
     SELECT 
         sequsuario,
         nomeusuario,
-        idadeusuario,
+        dtnascimentousuario,
         codusuario,
         senhausuario,
-        cpfusuario
+        cpfusuario,
+        telusuario,
+        emailusuario
     FROM usuario    
     `;
 
@@ -23,43 +25,74 @@ class UsuarioRepository {
     }
 
     async criarUsuario(dadosUsuario: IUsuario): Promise<void> {
-        const { data, error } = await supabase
+
+        const query = `
+        INSERT INTO usuario (
+        nomeusuario,
+        dtnascimentousuario,
+        codusuario,
+        senhausuario,
+        cpfusuario,
+        telusuario,
+        emailusuario
+        ) VALUES (?,?,?,?,?,?,?)
+        `;
+
+        const parametros = [
+            dadosUsuario.nomeusuario,
+            dadosUsuario.dtnascimentousuario,
+            dadosUsuario.codusuario,
+            dadosUsuario.senhausuario,
+            dadosUsuario.cpfusuario,
+            dadosUsuario.telusuario,
+            dadosUsuario.emailusuario
+        ];
+
+        try {
+            await db.executar(query, parametros);
+        } catch (err) {
+            console.error("Erro SQLite:", err);
+            throw new Error("Erro ao criar usuário no banco local");
+        }
+
+        const { error } = await supabase
             .from('usuario')
             .insert([{
                 nomeusuario: dadosUsuario.nomeusuario,
                 codusuario: dadosUsuario.codusuario,
                 senhausuario: dadosUsuario.senhausuario,
             }])
-            .select();
 
         if (error) throw new Error("Erro ao criar usuario na nuvem: " + error.message);
 
-        const sequsuario = data[0].sequsuario;
-
-        const query = `
-        INSERT INTO usuario (
-        sequsuario,
-        nomeusuario,
-        idadeusuario,
-        codusuario,
-        senhausuario,
-        cpfusuario
-        ) VALUES (?,?,?,?,?,?)
-        `;
-
-        const parametros = [
-            sequsuario,
-            dadosUsuario.nomeusuario,
-            dadosUsuario.idadeusuario,
-            dadosUsuario.codusuario,
-            dadosUsuario.senhausuario,
-            dadosUsuario.cpfusuario
-        ];
-
-        await db.executar(query, parametros);
     }
 
     async atualizarUsuario(dadosUsuario: IUsuario): Promise<void> {
+        const query = `
+            UPDATE usuario SET 
+                nomeusuario = ?, 
+                dtnascimentousuario = ?, 
+                codusuario = ?, 
+                senhausuario = ?, 
+                cpfusuario = ?
+            WHERE sequsuario = ?
+        `;
+        const parametros = [
+            dadosUsuario.nomeusuario,
+            dadosUsuario.dtnascimentousuario,
+            dadosUsuario.codusuario,
+            dadosUsuario.senhausuario,
+            dadosUsuario.cpfusuario,
+            dadosUsuario.sequsuario
+        ];
+
+        try {
+            await db.executar(query, parametros);
+        } catch (err) {
+            console.error("Erro SQLite:", err);
+            throw new Error("Erro ao atualizar usuário no banco local");
+        }
+
         const { error } = await supabase
             .from('usuario')
             .update({
@@ -70,40 +103,26 @@ class UsuarioRepository {
             .eq('sequsuario', dadosUsuario.sequsuario);
 
         if (error) throw new Error("Erro ao atualizar usuario na nuvem: " + error.message);
-
-        const query = `
-            UPDATE usuario SET 
-                nomeusuario = ?, 
-                idadeusuario = ?, 
-                codusuario = ?, 
-                senhausuario = ?, 
-                cpfusuario = ?
-            WHERE sequsuario = ?
-        `;
-        const parametros = [
-            dadosUsuario.nomeusuario,
-            dadosUsuario.idadeusuario,
-            dadosUsuario.codusuario,
-            dadosUsuario.senhausuario,
-            dadosUsuario.cpfusuario,
-            dadosUsuario.sequsuario
-        ];
-        await db.executar(query, parametros);
     }
 
     async deletarUsuario(sequsuario: number): Promise<void> {
+        const query = `DELETE FROM usuario WHERE sequsuario = ?`;
+        console.log("Deletando usuário com sequsuario:", sequsuario);
+        const parametros = [sequsuario];
+
+        try {
+            await db.executar(query, parametros);
+        } catch (err) {
+            console.error("Erro SQLite:", err);
+            throw new Error("Erro ao deletar usuário no banco local");
+        }
+
         const { error } = await supabase
             .from('usuario')
             .delete()
             .eq('sequsuario', sequsuario);
 
         if (error) throw new Error("Erro ao deletar usuario na nuvem: " + error.message);
-
-        const query = `DELETE FROM usuario WHERE sequsuario = ?`;
-
-        const parametros = [sequsuario];
-
-        await db.executar(query, parametros);
     }
 }
 

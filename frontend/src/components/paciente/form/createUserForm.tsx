@@ -6,6 +6,10 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format, parseISO } from "date-fns";
+
 import { Eye, EyeOff } from "lucide-react";
 
 import { maskCPF } from "@/utils/maskCpf";
@@ -14,6 +18,7 @@ import {
   type UsuarioFormInput,
   type UsuarioFormOutput,
 } from "@/schema/usuario.schema";
+import { maskTelefone } from "@/utils/maskTel";
 
 type Props = {
   paciente?: UsuarioFormInput;
@@ -30,16 +35,19 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<UsuarioFormInput, any, UsuarioFormOutput>({
-    mode:"onChange",
+    mode: "onChange",
     resolver: zodResolver(usuarioSchema),
     defaultValues: {
       nomeusuario: "",
-      idadeusuario: "",
+      dtnascimentousuario: "",
       codusuario: "",
       senhausuario: "",
       cpfusuario: "",
+      telusuario: "",
+      emailusuario: "",
     },
   });
 
@@ -48,20 +56,21 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
       reset({
         ...paciente,
         cpfusuario: maskCPF(paciente.cpfusuario ?? ""),
+        telusuario: paciente.telusuario ? maskTelefone(paciente.telusuario) : "",
       });
     }
   }, [paciente, reset]);
 
- async function handleFormSubmit(data: UsuarioFormOutput) {
+  async function handleFormSubmit(data: UsuarioFormOutput) {
     try {
       setLoading(true);
       const payload = { ...data, cpfusuario: data.cpfusuario.replace(/\D/g, "") };
-      
-      await onSave(payload); 
+
+      await onSave(payload);
 
       onSuccess?.();
       reset();
-    } catch(error) {
+    } catch (error) {
       console.error("Erro no formulário:", error);
     } finally {
       setLoading(false);
@@ -94,28 +103,39 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
             />
           </div>
 
-          {/* Idade */}
+          {/* Data de nascimento */}
           <div className="grid gap-1">
             <div className="flex items-center justify-between">
-              <Label htmlFor="idadeusuario">Idade</Label>
+              <Label htmlFor="dtnascimentousuario">Data de nascimento</Label>
               <span
-                id="idadeusuario-error"
+                id="dtnascimentousuario-error"
                 className="text-xs text-red-600 min-h-4"
               >
-                {errors.idadeusuario?.message ?? ""}
+                {errors.dtnascimentousuario?.message ?? ""}
               </span>
             </div>
 
-            <Input
-              id="idadeusuario"
-              type="number"
-              min={1}
-              {...register("idadeusuario")}
-              placeholder="Informe a Idade"
-              aria-invalid={!!errors.idadeusuario}
-              aria-describedby="idadeusuario-error"
-              className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-full text-left">
+                  {watch("dtnascimentousuario")
+                    ? format(parseISO(watch("dtnascimentousuario")), "dd/MM/yyyy")
+                    : "Selecione a data"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={watch("dtnascimentousuario") ? parseISO(watch("dtnascimentousuario")) : undefined}
+                  onSelect={(date) => {
+                    if (date) setValue("dtnascimentousuario", format(date, "yyyy-MM-dd"))
+                  }}
+                  defaultMonth={watch("dtnascimentousuario") ? parseISO(watch("dtnascimentousuario")) : undefined}
+                  captionLayout="dropdown"
+                  className="rounded-lg border"
+                />
+              </PopoverContent>
+            </Popover>
           </div>
 
           {/* Código */}
@@ -176,7 +196,7 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
           </div>
 
           {/* CPF */}
-          <div className="grid gap-1 md:col-span-2">
+          <div className="grid gap-1 relative">
             <div className="flex items-center justify-between">
               <Label htmlFor="cpfusuario">CPF</Label>
               <span
@@ -193,6 +213,53 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
               {...register("cpfusuario")}
               onChange={(e) =>
                 setValue("cpfusuario", maskCPF(e.target.value))
+              }
+              aria-invalid={!!errors.cpfusuario}
+              aria-describedby="cpfusuario-error"
+            />
+          </div>
+
+          <div className="grid gap-1 relative">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="telusuario">Telefone</Label>
+              <span
+                id="telusuario-error"
+                className="text-xs text-red-600 min-h-4"
+              >
+                {errors.telusuario?.message ?? ""}
+              </span>
+            </div>
+
+            <Input
+              id="telusuario"
+              {...register("telusuario")}
+              onChange={(e) => {
+                const nums = e.target.value.replace(/\D/g, "");
+                setValue("telusuario", maskTelefone(nums.slice(0, 11)));
+              }}
+              placeholder="(00) 00000-0000"
+              aria-invalid={!!errors.telusuario}
+              aria-describedby="telusuario-error"
+            />
+          </div>
+
+          <div className="grid gap-1 md:col-span-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="emailusuario">Email</Label>
+              <span
+                id="emailusuario-error"
+                className="text-xs text-red-600 min-h-4"
+              >
+                {errors.emailusuario?.message ?? ""}
+              </span>
+            </div>
+
+            <Input
+              id="emailusuario"
+              placeholder="seu.email@exemplo.com"
+              {...register("emailusuario")}
+              onChange={(e) =>
+                setValue("emailusuario", e.target.value)
               }
               aria-invalid={!!errors.cpfusuario}
               aria-describedby="cpfusuario-error"

@@ -23,11 +23,7 @@ export function CreatePacienteModal({ open, onOpenChange, paciente, onSave }: Pr
         </DialogHeader>
 
         <CreateUserForm
-          paciente={
-            paciente
-              ? { ...paciente, idadeusuario: String(paciente.idadeusuario) }
-              : undefined
-          }
+          paciente={paciente ?? undefined}
           onSave={onSave}
           onSuccess={() => onOpenChange(false)}
         />

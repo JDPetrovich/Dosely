@@ -7,17 +7,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { calcularIdade } from "@/utils/calcularIdade";
 
 type Props = {
   nome: string;
-  idade: string;
+  dtnascimentousuario: string;
   cpf: string;
   onClick?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
 };
 
-export function PacienteCard({ nome, idade, cpf, onClick, onEdit, onDelete }: Props) {
+export function PacienteCard({ nome, dtnascimentousuario, cpf, onClick, onEdit, onDelete }: Props) {
   return (
     <div
       onClick={onClick}
@@ -40,17 +41,17 @@ export function PacienteCard({ nome, idade, cpf, onClick, onEdit, onDelete }: Pr
       <div className="absolute top-2 right-2">
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               className="h-8 w-8 p-0 rounded-full hover:bg-slate-100"
-              onClick={(e) => e.stopPropagation()} 
+              onClick={(e) => e.stopPropagation()}
             >
               <MoreHorizontal className="h-4 w-4 text-slate-500" />
               <span className="sr-only">Abrir menu</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-32">
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
                 onEdit?.();
@@ -60,7 +61,7 @@ export function PacienteCard({ nome, idade, cpf, onClick, onEdit, onDelete }: Pr
               <Pencil className="mr-2 h-4 w-4 text-slate-500" />
               <span>Editar</span>
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete?.();
@@ -74,9 +75,9 @@ export function PacienteCard({ nome, idade, cpf, onClick, onEdit, onDelete }: Pr
         </DropdownMenu>
       </div>
 
-      <div className="pr-8"> 
+      <div className="pr-8">
         <p className="font-semibold text-slate-800 truncate">{nome}</p>
-        <p className="text-sm text-slate-500">Idade: {idade} anos</p>
+        <p className="text-sm text-slate-500">Idade: {calcularIdade(dtnascimentousuario)} anos</p>
       </div>
 
       <p className="text-xs text-gray-400 truncate">{maskCPF(cpf)}</p>
