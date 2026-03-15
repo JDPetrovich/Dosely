@@ -1,11 +1,13 @@
 export function calcularIdade(dataNascimento: string) {
     const hoje = new Date();
-    const nascimento = new Date(dataNascimento);
+
+    const [ano, mes, dia] = dataNascimento.split("-").map(Number);
+    const nascimento = new Date(ano, mes - 1, dia);
 
     let idade = hoje.getFullYear() - nascimento.getFullYear();
-    const mes = hoje.getMonth() - nascimento.getMonth();
+    const diffMes = hoje.getMonth() - nascimento.getMonth();
 
-    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+    if (diffMes < 0 || (diffMes === 0 && hoje.getDate() < nascimento.getDate())) {
         idade--;
     }
 
