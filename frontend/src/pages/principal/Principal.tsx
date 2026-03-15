@@ -6,7 +6,7 @@ import { AddPacienteCard } from "@/components/paciente/card/addPacienteCard";
 import { PacienteCard } from "@/components/paciente/card/pacienteCard";
 import { CreatePacienteModal } from "@/components/paciente/modal/createPacienteModal";
 import { ConfirmModal } from "@/components/paciente/modal/confirmModal";
-import { FichaPaciente } from "@/components/paciente/modal/fichaPaciente";
+import { FichaPaciente } from "@/components/paciente/modal/ficha/fichaPaciente";
 
 export default function Principal() {
     const [open, setOpen] = useState(false);
@@ -86,17 +86,14 @@ export default function Principal() {
                     Gerencie pacientes e cuidados diários
                 </p>
 
-                {/* CARD GRANDE */}
                 <div className="w-full max-w-7xl flex flex-col rounded-2xl bg-white border border-gray-200 shadow-sm overflow-hidden">
                     <h2 className="text-xl font-semibold text-slate-700 px-6 py-2 ">
                         Pacientes
                     </h2>
 
-                    {/* GRID DOS CARDS */}
                     <div className="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-                            {/* CARD DE ADICIONAR */}
                             <AddPacienteCard onClick={() => {
                                 setSelectedPaciente(null);
                                 setOpen(true);

@@ -86,7 +86,6 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
 
-          {/* Nome */}
           <div className="grid gap-1">
             <div className="flex items-center justify-between">
               <Label htmlFor="nomeusuario">Nome</Label>
@@ -107,7 +106,6 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
             />
           </div>
 
-          {/* Data de nascimento */}
           <div className="grid gap-1">
             <div className="flex items-center justify-between">
               <Label htmlFor="dtnascimentousuario">Data de nascimento</Label>
@@ -142,7 +140,6 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
             </Popover>
           </div>
 
-          {/* Código */}
           <div className="grid gap-1">
             <div className="flex items-center justify-between">
               <Label htmlFor="codusuario">Código</Label>
@@ -167,7 +164,6 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
             />
           </div>
 
-          {/* Senha */}
           <div className="grid gap-1 relative">
             <div className="flex items-center justify-between">
               <Label htmlFor="senhausuario">Senha</Label>
@@ -199,7 +195,6 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
             </button>
           </div>
 
-          {/* CPF */}
           <div className="grid gap-1 relative">
             <div className="flex items-center justify-between">
               <Label htmlFor="cpfusuario">CPF</Label>

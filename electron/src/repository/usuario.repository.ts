@@ -107,7 +107,6 @@ class UsuarioRepository {
 
     async deletarUsuario(sequsuario: number): Promise<void> {
         const query = `DELETE FROM usuario WHERE sequsuario = ?`;
-        console.log("Deletando usuário com sequsuario:", sequsuario);
         const parametros = [sequsuario];
 
         try {

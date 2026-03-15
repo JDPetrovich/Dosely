@@ -37,7 +37,6 @@ export function PacienteCard({ nome, dtnascimentousuario, cpf, onClick, onEdit, 
         relative
       "
     >
-      {/* MENU DE AÇÕES (TRÊS PONTINHOS) */}
       <div className="absolute top-2 right-2">
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
