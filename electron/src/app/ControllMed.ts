@@ -20,7 +20,7 @@ export default function Principal() {
   if (!app.isPackaged) {
     const menu = Menu.buildFromTemplate([
       {
-        role: "viewMenu", 
+        role: "viewMenu",
       },
       {
         role: "windowMenu",

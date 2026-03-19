@@ -17,7 +17,7 @@ export default function Principal() {
     const [deletar, setDeletar] = useState(false);
 
     const carregarPacientes = async () => {
-        const respostaIpc = await window.ipc.buscarUsuarios();
+        const respostaIpc = await window.api.usuarios.buscar();
 
         if (respostaIpc.sucesso) {
             setPacientes(respostaIpc.dados);
@@ -31,12 +31,12 @@ export default function Principal() {
         let respostaIpc;
 
         if (selectedPaciente?.sequsuario) {
-            respostaIpc = await window.ipc.atualizarUsuario({
+            respostaIpc = await window.api.usuarios.atualizar({
                 ...data,
                 sequsuario: selectedPaciente.sequsuario
             });
         } else {
-            respostaIpc = await window.ipc.criarUsuario(data);
+            respostaIpc = await window.api.usuarios.criar(data);
         }
 
         if (respostaIpc.sucesso) {
@@ -53,7 +53,7 @@ export default function Principal() {
 
         try {
             setDeletar(true);
-            const respostaIpc = await window.ipc.deletarUsuario(selectedPaciente.sequsuario!);
+            const respostaIpc = await window.api.usuarios.deletar(selectedPaciente.sequsuario!);
 
             if (respostaIpc.sucesso) {
                 setPacientes((prev) => prev.filter((p) => p.sequsuario !== selectedPaciente.sequsuario));

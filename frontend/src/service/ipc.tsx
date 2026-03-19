@@ -1,2 +1,2 @@
-const ipc: Window["ipc"] = window.ipc;
-export default ipc;
+const api: Window["api"] = window.api;
+export default api;

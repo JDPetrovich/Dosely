@@ -1,62 +1,51 @@
 import { ipcMain } from "electron";
-import { UsuarioRepository } from "../repository/usuario.repository.js";
-import IUsuario from "../interfaces/usuario/usuario.interface";
-import ITelaUsuario from "../interfaces/usuario/telaUsuario.interface.js";
+import axios from "axios";
 
-interface IRespostaIpc {
-    sucesso: boolean,
-    mensagem: string,
-    dados?: ITelaUsuario[]
-}
+const API_BASE = "http://localhost:3000/api";
+const API_KEY = "jaumgostoso";
 
-const prepararRespostaUsuario = (
-    usuario: IUsuario[],
-    indsucesso: boolean = true,
-    mensagemerro: string = ""
-): IRespostaIpc => {
-    return {
-        dados: usuario,
-        sucesso: indsucesso,
-        mensagem: mensagemerro
+const api = axios.create({
+    baseURL: API_BASE,
+    headers: {
+        "x-api-key": API_KEY
     }
-}
+});
 
 export async function usuariohandle() {
-    const repo = new UsuarioRepository();
 
     ipcMain.handle("retornar-usuarios", async () => {
         try {
-            const usuario = await repo.buscarUsuarios();
-            return prepararRespostaUsuario(usuario);
+            const res = await api.get("/usuarios");
+            return res.data;
         } catch (error) {
-            return prepararRespostaUsuario([], false, (error as Error).message);
+            return { sucesso: false, mensagem: (error as Error).message };
         }
     });
 
-    ipcMain.handle("criar-usuario", async (_, dadosUsuario: IUsuario) => {
+    ipcMain.handle("criar-usuario", async (_, dadosUsuario) => {
         try {
-            await repo.criarUsuario(dadosUsuario);
-            return prepararRespostaUsuario([], true, "Usuário criado com sucesso!");
+            const res = await api.post("/usuarios", dadosUsuario);
+            return { sucesso: true, dados: res.data };
         } catch (error) {
-            return prepararRespostaUsuario([], false, (error as Error).message);
+            return { sucesso: false, mensagem: (error as Error).message };
         }
-    })
+    });
 
-    ipcMain.handle("atualizar-usuario", async (_, dadosUsuario: IUsuario) => {
+    ipcMain.handle("atualizar-usuario", async (_, dadosUsuario) => {
         try {
-            await repo.atualizarUsuario(dadosUsuario);
-            return prepararRespostaUsuario([], true, "Usuário atualizado com sucesso!");
+            const res = await api.put(`/usuarios/${dadosUsuario.sequsuario}`, dadosUsuario);
+            return { sucesso: true, dados: res.data };
         } catch (error) {
-            return prepararRespostaUsuario([], false, (error as Error).message);
+            return { sucesso: false, mensagem: (error as Error).message };
         }
-    })
+    });
 
     ipcMain.handle("deletar-usuario", async (_, sequsuario: number) => {
         try {
-            await repo.deletarUsuario(sequsuario);
-            return prepararRespostaUsuario([], true, "Usuário deletado com sucesso!");
+            await api.delete(`/usuarios/${sequsuario}`);
+            return { sucesso: true };
         } catch (error) {
-            return prepararRespostaUsuario([], false, (error as Error).message);
+            return { sucesso: false, mensagem: (error as Error).message };
         }
-    })
+    });
 }

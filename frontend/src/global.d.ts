@@ -1,21 +1,21 @@
-import { IInfoAdicionalIpc } from "@/interfaces/infoadicional.interface";
 import type { UsuarioFormOutput } from "./schema/usuario.schema";
 
 export { };
 
 declare global {
     interface Window {
-        ipc: {
-            send: (channel: string, ...args: any[]) => void;
-            on: (channel: string, listener: (...args: any[]) => void) => void;
-            invoke: (channel: string, ...args: any[]) => Promise<any>;
-            
-            buscarUsuarios: () => Promise<IUsuario>;
-            criarUsuario: (dadosUsuario: UsuarioFormOutput) => Promise<RespostaIpc>;
-            atualizarUsuario: (dadosUsuario: UsuarioFormOutput) => Promise<RespostaIpc>;
-            deletarUsuario: (sequsuario: number) => Promise<RespostaIpc>;
-        }
-    }
+        api: {
+            usuarios: {
+                buscar: () => Promise<RespostaIpc>;
+                criar: (dados: UsuarioFormOutput) => Promise<RespostaIpc>;
+                atualizar: (dados: UsuarioFormOutput) => Promise<RespostaIpc>;
+                deletar: (id: number) => Promise<RespostaIpc>;
+            };
+        };
+        config: {
+            apiKey: string;
+        };
+    };
 }
 
 export interface RespostaIpc<T = any> {
