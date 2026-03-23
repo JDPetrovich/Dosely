@@ -5,6 +5,6 @@ contextBridge.exposeInMainWorld("api", {
         buscar: () => ipcRenderer.invoke("retornar-usuarios"),
         criar: (dados: any) => ipcRenderer.invoke("criar-usuario", dados),
         atualizar: (dados: any) => ipcRenderer.invoke("atualizar-usuario", dados),
-        deletar: (id: number) => ipcRenderer.invoke("deletar-usuario", id),
+        deletar: (id: number, codusuario: string) => ipcRenderer.invoke("deletar-usuario", id, codusuario),
     }
 });

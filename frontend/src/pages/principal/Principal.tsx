@@ -53,7 +53,7 @@ export default function Principal() {
 
         try {
             setDeletar(true);
-            const respostaIpc = await window.api.usuarios.deletar(selectedPaciente.sequsuario!);
+            const respostaIpc = await window.api.usuarios.deletar(selectedPaciente.sequsuario!, selectedPaciente.codusuario);
 
             if (respostaIpc.sucesso) {
                 setPacientes((prev) => prev.filter((p) => p.sequsuario !== selectedPaciente.sequsuario));

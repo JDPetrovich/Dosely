@@ -40,9 +40,9 @@ export async function usuariohandle() {
         }
     });
 
-    ipcMain.handle("deletar-usuario", async (_, sequsuario: number) => {
+    ipcMain.handle("deletar-usuario", async (_, sequsuario: number, codusuario: string) => {
         try {
-            await api.delete(`/usuarios/${sequsuario}`);
+            await api.delete(`/usuarios/${sequsuario}`, { data: { codusuario } });
             return { sucesso: true };
         } catch (error) {
             return { sucesso: false, mensagem: (error as Error).message };

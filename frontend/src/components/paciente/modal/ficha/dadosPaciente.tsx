@@ -22,7 +22,7 @@ export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
   return (
     <Card className="shadow-sm">
       <CardHeader className="bg-blue-50 border-b">
-        <CardTitle className="flex items-center justify-between text-blue-900">
+        <CardTitle className="flex items-center justify-between text-blue-900 mt-0.5">
           <div className="flex items-center gap-2">
             <User className="h-5 w-5" />
             Dados do Paciente
@@ -40,7 +40,7 @@ export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
           </Button>
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-6">
+      <CardContent className="pt-2">
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <span className="text-gray-600 font-medium">Nome:</span>

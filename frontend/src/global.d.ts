@@ -9,7 +9,7 @@ declare global {
                 buscar: () => Promise<RespostaIpc>;
                 criar: (dados: UsuarioFormOutput) => Promise<RespostaIpc>;
                 atualizar: (dados: UsuarioFormOutput) => Promise<RespostaIpc>;
-                deletar: (id: number) => Promise<RespostaIpc>;
+                deletar: (id: number, codusuario: string) => Promise<RespostaIpc>;
             };
         };
         config: {
