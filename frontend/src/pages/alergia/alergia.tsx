@@ -1,10 +1,12 @@
 import { Header } from "@/components/header/header"
+import { usePaciente } from "@/contexts/paciente.context";
 import type { AlergiaFormInput, AlergiaFormOutput } from "@/schema/paciente.schema";
 import { useEffect, useState } from "react";
 
 export default function Alergia() {
     const [alergias, setAlergias] = useState<AlergiaFormInput[]>([]);
     const [alergiaspaciente, setAlergiaspaciente] = useState<AlergiaFormOutput[]>([]);
+    const { paciente } = usePaciente();
 
     const carregarAlergias = async () => {
         const respostaIpc = await window.api.alergias.buscar();
@@ -27,8 +29,10 @@ export default function Alergia() {
 
     useEffect(() => {
         carregarAlergias();
-        carregarAlergiaspaciente(1);
-    }, []);
+        if (paciente?.seqpaciente) {
+            carregarAlergiaspaciente(paciente.seqpaciente);
+        }
+    }, [paciente]);
 
     return (
         <div className="h-screen flex flex-col text-gray-800 overflow-hidden">

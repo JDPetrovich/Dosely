@@ -12,13 +12,12 @@ import { format, parseISO } from "date-fns";
 
 import { Eye, EyeOff } from "lucide-react";
 
-import { maskCPF } from "@/utils/maskCpf";
 import {
   pacienteSchema,
   type PacienteFormInput,
   type PacienteFormOutput,
 } from "@/schema/paciente.schema";
-import { maskTelefone } from "@/utils/maskTel";
+import { formatarCPF, formatarTelefone } from "@/utils/formatar";
 
 type Props = {
   paciente?: PacienteFormInput;
@@ -55,8 +54,8 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
     if (paciente) {
       reset({
         ...paciente,
-        cpfpaciente: maskCPF(paciente.cpfpaciente ?? ""),
-        telpaciente: paciente.telpaciente ? maskTelefone(paciente.telpaciente) : "",
+        cpfpaciente: formatarCPF(paciente.cpfpaciente ?? ""),
+        telpaciente: paciente.telpaciente ? formatarTelefone(paciente.telpaciente) : "",
       });
     }
   }, [paciente, reset]);
@@ -211,7 +210,7 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
               placeholder="000.000.000-00"
               {...register("cpfpaciente")}
               onChange={(e) =>
-                setValue("cpfpaciente", maskCPF(e.target.value))
+                setValue("cpfpaciente", formatarCPF(e.target.value))
               }
               aria-invalid={!!errors.cpfpaciente}
               aria-describedby="cpfpaciente-error"
@@ -234,7 +233,7 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
               {...register("telpaciente")}
               onChange={(e) => {
                 const nums = e.target.value.replace(/\D/g, "");
-                setValue("telpaciente", maskTelefone(nums.slice(0, 11)));
+                setValue("telpaciente", formatarTelefone(nums.slice(0, 11)));
               }}
               placeholder="(00) 00000-0000"
               aria-invalid={!!errors.telpaciente}

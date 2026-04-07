@@ -1,19 +1,19 @@
 {
-  "name": "controll_med",
+  "name": "dosely",
   "version": "1.0.0",
   "description": "",
   "main": "electron/dist/main.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JDPetrovich/Controll-Med.git"
+    "url": "git+https://github.com/JDPetrovich/Dosely.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/JDPetrovich/Controll-Med/issues"
+    "url": "https://github.com/JDPetrovich/Dosely/issues"
   },
-  "homepage": "https://github.com/JDPetrovich/Controll-Med",
+  "homepage": "https://github.com/JDPetrovich/Dosely",
   "type": "module",
   "scripts": {
     "dev:frontend": "npm --prefix frontend run dev",
@@ -49,8 +49,8 @@
     "wait-on": "^9.0.1"
   },
   "build": {
-    "appId": "br.com.controllMed.",
-    "productName": "ControllMed",
+    "appId": "br.com.dosely.",
+    "productName": "Dosely",
     "directories": {
       "buildResources": "build",
       "output": "release"
@@ -66,7 +66,7 @@
     ],
     "extraResources": [
       {
-        "from": "resources",
+        "from": "electron/src/resources",
         "to": "resources",
         "filter": [
           "**/*"
@@ -82,7 +82,7 @@
           ]
         }
       ],
-      "icon": "build/icon.ico",
+      "icon": "electron/src/resources/logo.png",
       "requestedExecutionLevel": "asInvoker"
     },
     "nsis": {
@@ -90,7 +90,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": ""
+      "shortcutName": "Dosely"
     },
     "publish": null
   }

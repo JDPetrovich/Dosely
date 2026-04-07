@@ -2,13 +2,29 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Edit, Plus } from "lucide-react";
+import type { AlergiaFormOutput } from "@/schema/paciente.schema";
+import { useEffect, useState } from "react";
+import { usePaciente } from "@/contexts/paciente.context";
 
-interface AlergiasRestricoeProps {
-    alergias?: string[];
-    onEdit?: () => void;
-}
+export function AlergiasRestricoes({ onEdit }: { onEdit: () => void }) {
+    const [alergiaspaciente, setAlergiaspaciente] = useState<AlergiaFormOutput[]>([]);
+    const { paciente } = usePaciente();
 
-export function AlergiasRestricoes({ alergias = ["Penicilina", "Dipirona"], onEdit }: AlergiasRestricoeProps) {
+    const carregarAlergiaspaciente = async (seqpaciente: number) => {
+        const respostaIpc = await window.api.alergiasPaciente.buscar(seqpaciente);
+        if (respostaIpc.sucesso) {
+            setAlergiaspaciente(respostaIpc.dados);
+        } else {
+            console.error("Erro IPC:", respostaIpc.mensagem);
+        }
+    }
+
+    useEffect(() => {
+        if (paciente?.seqpaciente) {
+            carregarAlergiaspaciente(paciente.seqpaciente);
+        }
+    }, [paciente]);
+
     return (
         <Card className="shadow-sm border-red-100">
             <CardHeader className="bg-red-50 border-b">
@@ -27,11 +43,11 @@ export function AlergiasRestricoes({ alergias = ["Penicilina", "Dipirona"], onEd
                     </Button>
                 </CardTitle>
             </CardHeader>
-            <CardContent className="pt-6">
+            <CardContent className="pt-2">
                 <div className="flex flex-wrap gap-2">
-                    {alergias.map((a) => (
-                        <Badge key={a} variant="destructive" className="cursor-pointer">
-                            {a}
+                    {alergiaspaciente.map((a) => (
+                        <Badge key={a.seqalergia} variant="destructive" className="cursor-pointer">
+                            {a.descalergia}
                         </Badge>
                     ))}
                     <Badge

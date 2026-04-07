@@ -69,7 +69,7 @@ export default function Login() {
         elevation="$2"
       >
         <YStack gap="$2">
-          <H2 fontWeight="800">Controll Med</H2>
+          <H2 fontWeight="800">Dosely</H2>
           <Text fontSize="$3" opacity={0.7}>
             Controle seus horários de medicação
           </Text>

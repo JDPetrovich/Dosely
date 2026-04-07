@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+//import logo from "../../assets/logo.png";
+import logoTransparente from "../../assets/logo-transparent.png";
 
 export default function Login() {
     const [login, setLogin] = useState("");
@@ -30,12 +32,14 @@ export default function Login() {
     }
 
     return (
-        <div className="w-screen h-screen flex items-center justify-center">
+        <div className="w-screen h-screen flex items-center justify-center bg-linear-to-br from-mint-light via-teal-50 to-teal-100">
             <form
                 onSubmit={handleSubmit}
-                className="bg-white p-6 rounded shadow w-full max-w-sm"
+                className="bg-white/80 backdrop-blur-md p-6 rounded shadow w-full max-w-sm"
             >
                 <h1 className="text-xl font-bold mb-4 text-center">Login</h1>
+
+                <img src={logoTransparente} alt="Logo" />
 
                 {erro && (
                     <p className="text-red-500 text-sm mb-3">{erro}</p>

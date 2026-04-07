@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from "electron";
-import ControllMed from "./app/ControllMed.js";
+import Dosely from "./app/Dosely.js";
 import "dotenv/config";
 import { pacientehandle } from "./handlers/paciente.handle.js";
 import { alergiaHandle } from "./handlers/alergia.handle.js";
@@ -7,7 +7,7 @@ import { alergiaPacienteHandle } from "./handlers/alergia-paciente.handle.js";
 import { usuarioHandle } from "./handlers/usuario.handle.js";
 
 app.whenReady().then(async () => {
-    ControllMed();
+    Dosely();
     pacientehandle();
     alergiaHandle();
     alergiaPacienteHandle();
@@ -16,7 +16,7 @@ app.whenReady().then(async () => {
 
 app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-        ControllMed();
+        Dosely();
     }
 });
 

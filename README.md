@@ -1,6 +1,6 @@
-# 🏥 ControllMed Express
+# 🏥 Dosely
 
-O **ControllMed Express** é um ecossistema de saúde projetado para garantir a precisão na administração de medicamentos. Ele utiliza uma arquitetura híbrida para conectar administradores (Desktop) e cuidadores/pacientes (Mobile) em tempo real.
+O **Dosely** é um ecossistema de saúde projetado para garantir a precisão na administração de medicamentos. Ele utiliza uma arquitetura híbrida para conectar administradores (Desktop) e cuidadores/pacientes (Mobile) em tempo real.
 
 ---
 

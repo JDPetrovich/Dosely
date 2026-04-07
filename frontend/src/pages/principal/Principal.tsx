@@ -6,13 +6,15 @@ import { AddPacienteCard } from "@/components/paciente/card/addPacienteCard";
 import { PacienteCard } from "@/components/paciente/card/pacienteCard";
 import { CreatePacienteModal } from "@/components/paciente/modal/createPacienteModal";
 import { ConfirmModal } from "@/components/paciente/modal/confirmModal";
-import { FichaPaciente } from "@/components/paciente/modal/ficha/fichaPaciente";
+import { usePaciente } from "@/contexts/paciente.context";
+import { FichaPaciente } from "@/components/paciente/ficha/fichaPaciente";
 
 export default function Principal() {
     const [open, setOpen] = useState(false);
     const [openFicha, setOpenFicha] = useState(false);
     const [pacientes, setPacientes] = useState<PacienteFormInput[]>([]);
     const [selectedPaciente, setSelectedPaciente] = useState<PacienteFormInput | null>(null);
+    const { setPaciente } = usePaciente();
     const [modalConfirm, setModalConfirm] = useState(false);
     const [deletar, setDeletar] = useState(false);
 
@@ -107,6 +109,7 @@ export default function Principal() {
                                     cpf={p.cpfpaciente}
                                     onClick={() => {
                                         setSelectedPaciente(p);
+                                        setPaciente(p.seqpaciente ? { seqpaciente: p.seqpaciente, nompaciente: p.nomepaciente } : null);
                                         setOpenFicha(true);
                                     }}
                                     onEdit={() => {

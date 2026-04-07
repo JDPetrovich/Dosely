@@ -1,3 +1,5 @@
+import { format, parseISO } from "date-fns";
+
 export function formatarDataHora(dateString?: string): string {
     if (!dateString) {
         return '';
@@ -35,4 +37,10 @@ export function formatarDataStrIso8601(dateString: string): string {
     const mes = dataDividida[1];
     const ano = dataDividida[2];
     return `${ano}-${mes}-${dia}`;
+}
+
+export function formatarDataNascimento(data: string) {
+    if (!data) return "";
+    const nascimento = parseISO(data);
+    return format(nascimento, "dd/MM/yyyy");
 }

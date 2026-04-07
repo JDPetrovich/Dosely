@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useLocation, useNavigate } from "react-router-dom"
-//import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,9 +13,20 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { LogOut, Settings } from "lucide-react"
 
+
 export function Header() {
     //const [showWarn, setShowWarn] = useState(false)
     //const [nextPath, setNextPath] = useState<string | null>(null)
+    const [user, setUser] = useState([] as any)
+
+    useEffect(() => {
+        const load = async () => {
+            const res = await window.api.me()
+            setUser(res.dados)
+        }
+
+        load()
+    }, [])
 
     const menuItems = [
         { label: "Principal", path: "/principal" },
@@ -46,9 +57,9 @@ export function Header() {
 
                 <div className="flex justify-start items-center gap-2">
                     <div className="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">M</span>
+                        <span className="text-white font-bold text-sm">D</span>
                     </div>
-                    <span className="font-bold text-xl text-slate-800">MedControll</span>
+                    <span className="font-bold text-xl text-slate-800">Dosely</span>
                 </div>
 
                 <nav className="flex items-center justify-center gap-2">
@@ -81,7 +92,7 @@ export function Header() {
                         <DropdownMenuContent className="w-56 mt-2" align="end">
                             <DropdownMenuLabel className="font-normal">
                                 <div className="flex flex-col space-y-1">
-                                    <p className="text-sm font-medium">Paciente</p>
+                                    <p className="text-sm font-medium">{user?.nome || 'Usuário'}</p>
                                     <p className="text-xs text-muted-foreground italic">paciente@email.com</p>
                                 </div>
                             </DropdownMenuLabel>
@@ -93,7 +104,7 @@ export function Header() {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                                 className="text-red-600 focus:bg-red-50 focus:text-red-600 cursor-pointer"
-                                onClick={() => console.log("Sair")}
+                                onClick={() => navigate('/')}
                             >
                                 <LogOut className="mr-2 h-4 w-4" />
                                 <span>Sair</span>

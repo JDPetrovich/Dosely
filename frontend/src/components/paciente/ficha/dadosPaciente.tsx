@@ -8,10 +8,9 @@ import {
   Mail,
   Edit,
 } from "lucide-react";
-import { maskCPF } from "@/utils/maskCpf";
 import { calcularIdade } from "@/utils/calcularIdade";
-import { formatarDataNascimento } from "@/utils/FormatarIdade";
-import { maskTelefone } from "@/utils/maskTel";
+import { formatarCPF, formatarTelefone } from "@/utils/formatar";
+import { formatarDataNascimento } from "@/utils/formatarData";
 
 interface DadosPacienteProps {
   paciente: any;
@@ -19,6 +18,7 @@ interface DadosPacienteProps {
 }
 
 export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
+
   return (
     <Card className="shadow-sm">
       <CardHeader className="bg-blue-50 border-b">
@@ -68,7 +68,7 @@ export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
           <div>
             <p className="text-sm text-gray-500">CPF</p>
             <p className="text-gray-900 font-mono mt-1">
-              {maskCPF(paciente.cpfpaciente)}
+              {formatarCPF(paciente.cpfpaciente)}
             </p>
           </div>
 
@@ -79,7 +79,7 @@ export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
             <div className="space-y-2 mt-2">
               <div className="flex items-center gap-2 text-gray-900">
                 <Phone className="h-4 w-4 text-gray-400" />
-                {paciente.telpaciente ? maskTelefone(paciente.telpaciente) : "Não informado"}
+                {paciente.telpaciente ? formatarTelefone(paciente.telpaciente) : "Não informado"}
               </div>
               <div className="flex items-center gap-2 text-gray-900">
                 <Mail className="h-4 w-4 text-gray-400" />

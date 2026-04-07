@@ -1,4 +1,4 @@
-import { maskCPF } from "@/utils/maskCpf";
+
 import { Pencil, Trash2, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { calcularIdade } from "@/utils/calcularIdade";
+import { formatarCPF } from "@/utils/formatar";
 
 type Props = {
   nome: string;
@@ -79,7 +80,7 @@ export function PacienteCard({ nome, dtnascimentopaciente, cpf, onClick, onEdit,
         <p className="text-sm text-slate-500">Idade: {calcularIdade(dtnascimentopaciente)} anos</p>
       </div>
 
-      <p className="text-xs text-gray-400 truncate">{maskCPF(cpf)}</p>
+      <p className="text-xs text-gray-400 truncate">{formatarCPF(cpf)}</p>
     </div>
   );
 }
