@@ -1,11 +1,17 @@
 import { app, BrowserWindow } from "electron";
 import ControllMed from "./app/ControllMed.js";
 import "dotenv/config";
-import { usuariohandle } from "./handlers/usuario.handle.js";
+import { pacientehandle } from "./handlers/paciente.handle.js";
+import { alergiaHandle } from "./handlers/alergia.handle.js";
+import { alergiaPacienteHandle } from "./handlers/alergia-paciente.handle.js";
+import { usuarioHandle } from "./handlers/usuario.handle.js";
 
 app.whenReady().then(async () => {
     ControllMed();
-    usuariohandle();
+    pacientehandle();
+    alergiaHandle();
+    alergiaPacienteHandle();
+    usuarioHandle();
 });
 
 app.on("activate", () => {

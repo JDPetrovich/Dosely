@@ -1,51 +1,28 @@
 import { ipcMain } from "electron";
-import axios from "axios";
+import { apiFetch } from "../util/apiFetch.js";
 
-const API_BASE = "http://localhost:3000/api";
-const API_KEY = "jaumgostoso";
-
-const api = axios.create({
-    baseURL: API_BASE,
-    headers: {
-        "x-api-key": API_KEY
-    }
-});
-
-export async function usuariohandle() {
-
-    ipcMain.handle("retornar-usuarios", async () => {
+export function usuarioHandle() {
+    ipcMain.handle("login", async (_, { login, senha }) => {
         try {
-            const res = await api.get("/usuarios");
-            return res.data;
+            const data = await apiFetch("/login", {
+                method: "POST",
+                body: JSON.stringify({ login, senha }),
+            });
+
+            return data
         } catch (error) {
             return { sucesso: false, mensagem: (error as Error).message };
         }
     });
 
-    ipcMain.handle("criar-usuario", async (_, dadosUsuario) => {
+    ipcMain.handle("me", async () => {
         try {
-            const res = await api.post("/usuarios", dadosUsuario);
-            return { sucesso: true, dados: res.data };
-        } catch (error) {
-            return { sucesso: false, mensagem: (error as Error).message };
-        }
-    });
-
-    ipcMain.handle("atualizar-usuario", async (_, dadosUsuario) => {
-        try {
-            const res = await api.put(`/usuarios/${dadosUsuario.sequsuario}`, dadosUsuario);
-            return { sucesso: true, dados: res.data };
-        } catch (error) {
-            return { sucesso: false, mensagem: (error as Error).message };
-        }
-    });
-
-    ipcMain.handle("deletar-usuario", async (_, sequsuario: number, codusuario: string) => {
-        try {
-            await api.delete(`/usuarios/${sequsuario}`, { data: { codusuario } });
-            return { sucesso: true };
-        } catch (error) {
-            return { sucesso: false, mensagem: (error as Error).message };
+            return await apiFetch("/me");
+        } catch (error: any) {
+            return {
+                sucesso: false,
+                mensagem: error.message,
+            };
         }
     });
 }

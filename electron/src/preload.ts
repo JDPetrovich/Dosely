@@ -1,10 +1,20 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("api", {
-    usuarios: {
-        buscar: () => ipcRenderer.invoke("retornar-usuarios"),
-        criar: (dados: any) => ipcRenderer.invoke("criar-usuario", dados),
-        atualizar: (dados: any) => ipcRenderer.invoke("atualizar-usuario", dados),
-        deletar: (id: number, codusuario: string) => ipcRenderer.invoke("deletar-usuario", id, codusuario),
+    usuario: {
+        login: (dados: any) => ipcRenderer.invoke("login", dados),
+    },
+    me: () => ipcRenderer.invoke("me"),
+    pacientes: {
+        buscar: () => ipcRenderer.invoke("retornar-pacientes"),
+        criar: (dados: any) => ipcRenderer.invoke("criar-paciente", dados),
+        atualizar: (dados: any) => ipcRenderer.invoke("atualizar-paciente", dados),
+        deletar: (id: number, codpaciente: string) => ipcRenderer.invoke("deletar-paciente", id, codpaciente),
+    },
+    alergias: {
+        buscar: () => ipcRenderer.invoke("retornar-alergias"),
+    },
+    alergiasPaciente: {
+        buscar: (seqpaciente: number) => ipcRenderer.invoke("retornar-paciente-alergias", seqpaciente),
     }
 });

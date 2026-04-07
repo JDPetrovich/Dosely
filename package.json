@@ -30,9 +30,12 @@
   "dependencies": {
     "@azure/msal-node": "^3.8.4",
     "@supabase/supabase-js": "^2.90.1",
+    "axios": "^1.14.0",
+    "axios-cookiejar-support": "^6.0.5",
     "electron-store": "^11.0.2",
     "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "tough-cookie": "^6.0.1"
   },
   "devDependencies": {
     "@types/electron": "^1.4.38",
