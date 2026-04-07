@@ -1,16 +1,26 @@
-import type { UsuarioFormOutput } from "./schema/usuario.schema";
+import type { PacienteFormOutput } from "./schema/paciente.schema";
 
 export { };
 
 declare global {
     interface Window {
         api: {
-            usuarios: {
+            pacientes: {
                 buscar: () => Promise<RespostaIpc>;
-                criar: (dados: UsuarioFormOutput) => Promise<RespostaIpc>;
-                atualizar: (dados: UsuarioFormOutput) => Promise<RespostaIpc>;
-                deletar: (id: number, codusuario: string) => Promise<RespostaIpc>;
+                criar: (dados: PacienteFormOutput) => Promise<RespostaIpc>;
+                atualizar: (dados: PacienteFormOutput) => Promise<RespostaIpc>;
+                deletar: (id: number, codpaciente: string) => Promise<RespostaIpc>;
             };
+            alergias: {
+                buscar: () => Promise<RespostaIpc>;
+            };
+            alergiasPaciente: {
+                buscar: (seqpaciente: number) => Promise<RespostaIpc>;
+            };
+            usuario: {
+                login: (dados: any) => Promise<RespostaIpc>;
+            };
+            me: () => Promise<RespostaIpc>;
         };
         config: {
             apiKey: string;
