@@ -32,9 +32,9 @@ export function FichaPaciente({
   onEdit,
   paciente,
 }: FichaPacienteProps) {
-  const [isContinuous, setIsContinuous] = useState(false);
-  const [isExactTime, setIsExactTime] = useState(true);
-  const [medicamentos, setMedicamentos] = useState([
+  //const [isContinuous, setIsContinuous] = useState(false);
+  //const [isExactTime, setIsExactTime] = useState(true);
+  const [medicamentos] = useState([
     { id: 1, nome: "Paracetamol", dosagem: "500mg", ativo: true },
     { id: 2, nome: "Losartana", dosagem: "50mg", ativo: true },
   ]);
@@ -64,7 +64,7 @@ export function FichaPaciente({
           </Button>
         </div>
 
-        <div className="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-6 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto bg-gray-50 rounded-b-2xl p-4 md:p-6 scrollbar">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-1 space-y-6">
               <DadosPaciente paciente={paciente} onEdit={onEdit} />

@@ -19,8 +19,9 @@ export function Header() {
 
     const menuItems = [
         { label: "Principal", path: "/principal" },
-       /*  { label: "Teste", path: "/teste" }, */
+        /*  { label: "Teste", path: "/teste" }, */
         { label: "Remédios", path: "/remedio" },
+        { label: "Alergias", path: "/alergia" },
     ]
 
     const location = useLocation()
@@ -80,8 +81,8 @@ export function Header() {
                         <DropdownMenuContent className="w-56 mt-2" align="end">
                             <DropdownMenuLabel className="font-normal">
                                 <div className="flex flex-col space-y-1">
-                                    <p className="text-sm font-medium">Usuário</p>
-                                    <p className="text-xs text-muted-foreground italic">usuario@email.com</p>
+                                    <p className="text-sm font-medium">Paciente</p>
+                                    <p className="text-xs text-muted-foreground italic">paciente@email.com</p>
                                 </div>
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />

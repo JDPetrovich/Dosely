@@ -1,39 +1,39 @@
 import { validarCpf } from "@/utils/validarCpf";
 import { z } from "zod";
 
-export const usuarioSchema = z.object({
-    sequsuario: z.number().optional(),
+export const pacienteSchema = z.object({
+    seqpaciente: z.number().optional(),
 
-    nomeusuario: z
+    nomepaciente: z
         .string().min(1, "*Nome é obrigatório"),
 
-    dtnascimentousuario: z
+    dtnascimentopaciente: z
         .string()
         .regex(/^\d{4}-\d{2}-\d{2}$/, "*Data deve ser no formato AAAA-MM-DD"),
 
-    codusuario: z
+    codpaciente: z
         .string().min(1, "*Código é obrigatório")
         .transform((v) => v.toUpperCase()),
 
-    senhausuario: z
+    senhapaciente: z
         .string().min(8, "*Senha mínimo 8 caracteres"),
 
-    cpfusuario: z.string()
+    cpfpaciente: z.string()
         .min(1, "*CPF é obrigatório")
         .transform((val) => val.replace(/[^\d]+/g, ''))
         .refine(validarCpf, { message: "CPF inválido" }),
 
-    telusuario: z
+    telpaciente: z
         .string()
         .transform((val) => val.replace(/[^\d]+/g, ''))
         .refine((val) => val.length >= 10, "*Telefone deve ter no mínimo 10 dígitos")
         .refine((val) => val.length <= 11, "*Telefone deve ter no máximo 11 dígitos"),
 
-    emailusuario: z.string().email("Email inválido").optional().or(z.literal("")),
+    emailpaciente: z.string().email("Email inválido").optional().or(z.literal("")),
 });
 
-export type UsuarioFormInput = z.input<typeof usuarioSchema>;
-export type UsuarioFormOutput = z.output<typeof usuarioSchema>;
+export type PacienteFormInput = z.input<typeof pacienteSchema>;
+export type PacienteFormOutput = z.output<typeof pacienteSchema>;
 
 export const dadosMedicosSchema = z.object({
     datanascimento: z.string().optional(),
@@ -72,12 +72,12 @@ export const remedioJudicialSchema = z.object({
     alertaDiarioAposVencimento: z.boolean().default(true),
 });
 
-export const pacienteSchema = usuarioSchema.merge(dadosMedicosSchema).extend({
+/* export const pacienteSchema = usuarioSchema.merge(dadosMedicosSchema).extend({
     medicamentos: z.array(medicamentoSchema).default([]),
     remediosJudiciais: z.array(remedioJudicialSchema).default([]),
     notificacoesAtivas: z.boolean().default(true),
     observacoesImportantes: z.string().optional(),
-});
+}); */
 
 export const fichaMedicaSchema = z.object({
     sequsuario: z.number(),
@@ -86,8 +86,19 @@ export const fichaMedicaSchema = z.object({
     remediosJudiciais: z.array(remedioJudicialSchema).optional(),
 });
 
-export type PacienteFormInput = z.input<typeof pacienteSchema>;
-export type PacienteFormOutput = z.output<typeof pacienteSchema>;
+export const alergiaSchema = z.object({
+    seqalergia: z.number().optional(),
+    descalergia: z.string().optional(),
+});
+
+export const alergiaPacienteSchema = z.object({
+    seqpaciente: z.number(),
+    seqalergia: z.number(),
+    descalergia: z.string(),
+});
+
+export type AlergiaFormInput = z.input<typeof alergiaSchema>;
+export type AlergiaFormOutput = z.output<typeof alergiaPacienteSchema>;
 
 export type MedicamentoFormInput = z.input<typeof medicamentoSchema>;
 export type MedicamentoFormOutput = z.output<typeof medicamentoSchema>;

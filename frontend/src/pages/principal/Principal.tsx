@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Header } from "@/components/header/header";
 
-import type { UsuarioFormInput, UsuarioFormOutput } from "@/schema/usuario.schema";
+import type { PacienteFormInput, PacienteFormOutput } from "@/schema/paciente.schema";
 import { AddPacienteCard } from "@/components/paciente/card/addPacienteCard";
 import { PacienteCard } from "@/components/paciente/card/pacienteCard";
 import { CreatePacienteModal } from "@/components/paciente/modal/createPacienteModal";
@@ -11,13 +11,13 @@ import { FichaPaciente } from "@/components/paciente/modal/ficha/fichaPaciente";
 export default function Principal() {
     const [open, setOpen] = useState(false);
     const [openFicha, setOpenFicha] = useState(false);
-    const [pacientes, setPacientes] = useState<UsuarioFormInput[]>([]);
-    const [selectedPaciente, setSelectedPaciente] = useState<UsuarioFormInput | null>(null);
+    const [pacientes, setPacientes] = useState<PacienteFormInput[]>([]);
+    const [selectedPaciente, setSelectedPaciente] = useState<PacienteFormInput | null>(null);
     const [modalConfirm, setModalConfirm] = useState(false);
     const [deletar, setDeletar] = useState(false);
 
     const carregarPacientes = async () => {
-        const respostaIpc = await window.api.usuarios.buscar();
+        const respostaIpc = await window.api.pacientes.buscar();
 
         if (respostaIpc.sucesso) {
             setPacientes(respostaIpc.dados);
@@ -26,17 +26,17 @@ export default function Principal() {
         }
     };
 
-    const criarEditarPaciente = async (data: UsuarioFormOutput) => {
+    const criarEditarPaciente = async (data: PacienteFormOutput) => {
 
         let respostaIpc;
 
-        if (selectedPaciente?.sequsuario) {
-            respostaIpc = await window.api.usuarios.atualizar({
+        if (selectedPaciente?.senhapaciente) {
+            respostaIpc = await window.api.pacientes.atualizar({
                 ...data,
-                sequsuario: selectedPaciente.sequsuario
+                seqpaciente: selectedPaciente.seqpaciente
             });
         } else {
-            respostaIpc = await window.api.usuarios.criar(data);
+            respostaIpc = await window.api.pacientes.criar(data);
         }
 
         if (respostaIpc.sucesso) {
@@ -53,10 +53,10 @@ export default function Principal() {
 
         try {
             setDeletar(true);
-            const respostaIpc = await window.api.usuarios.deletar(selectedPaciente.sequsuario!, selectedPaciente.codusuario);
+            const respostaIpc = await window.api.pacientes.deletar(selectedPaciente.seqpaciente!, selectedPaciente.codpaciente);
 
             if (respostaIpc.sucesso) {
-                setPacientes((prev) => prev.filter((p) => p.sequsuario !== selectedPaciente.sequsuario));
+                setPacientes((prev) => prev.filter((p) => p.seqpaciente !== selectedPaciente.seqpaciente));
                 setModalConfirm(false);
             } else {
                 alert("Erro ao excluir paciente: " + respostaIpc.mensagem);
@@ -102,9 +102,9 @@ export default function Principal() {
                             {pacientes.map((p, index) => (
                                 <PacienteCard
                                     key={index}
-                                    nome={p.nomeusuario}
-                                    dtnascimentousuario={p.dtnascimentousuario}
-                                    cpf={p.cpfusuario}
+                                    nome={p.nomepaciente}
+                                    dtnascimentopaciente={p.dtnascimentopaciente}
+                                    cpf={p.cpfpaciente}
                                     onClick={() => {
                                         setSelectedPaciente(p);
                                         setOpenFicha(true);
@@ -139,7 +139,7 @@ export default function Principal() {
                 title="Confirmar Exclusão"
                 description={(
                     <span>
-                        Tem certeza que deseja excluir o(a) paciente <strong>{selectedPaciente?.nomeusuario}</strong>? Essa ação não pode ser desfeita.
+                        Tem certeza que deseja excluir o(a) paciente <strong>{selectedPaciente?.nomepaciente}</strong>? Essa ação não pode ser desfeita.
                     </span>
                 )}
             />

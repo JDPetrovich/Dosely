@@ -44,7 +44,7 @@ export function RemediosJudiciais({
         },
     ],
     onAdicionarJudicial,
-    onToggleAlerta,
+    /* onToggleAlerta, */
     onToggleNotificacao,
 }: RemédiosJudiciaisProps) {
     return (

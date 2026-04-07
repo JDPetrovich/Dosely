@@ -12,7 +12,7 @@ interface StatusNotificaçõesProps {
 
 export function StatusNotificacoes({
     notificaçõesAtivas = true,
-    alertasCelular = true,
+    //alertasCelular = true,
     onToggle,
 }: StatusNotificaçõesProps) {
     return (

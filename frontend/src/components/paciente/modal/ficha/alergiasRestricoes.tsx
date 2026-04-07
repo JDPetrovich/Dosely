@@ -29,9 +29,9 @@ export function AlergiasRestricoes({ alergias = ["Penicilina", "Dipirona"], onEd
             </CardHeader>
             <CardContent className="pt-6">
                 <div className="flex flex-wrap gap-2">
-                    {alergias.map((alergia) => (
-                        <Badge key={alergia} variant="destructive" className="cursor-pointer">
-                            {alergia}
+                    {alergias.map((a) => (
+                        <Badge key={a} variant="destructive" className="cursor-pointer">
+                            {a}
                         </Badge>
                     ))}
                     <Badge

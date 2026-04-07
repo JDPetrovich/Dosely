@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Clock, Bell, CheckCircle2 } from "lucide-react";
+import { Clock, Bell } from "lucide-react";
 
 interface ResumoDiaProps {
   remediosHoje?: number;

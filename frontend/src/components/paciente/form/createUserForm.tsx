@@ -14,15 +14,15 @@ import { Eye, EyeOff } from "lucide-react";
 
 import { maskCPF } from "@/utils/maskCpf";
 import {
-  usuarioSchema,
-  type UsuarioFormInput,
-  type UsuarioFormOutput,
-} from "@/schema/usuario.schema";
+  pacienteSchema,
+  type PacienteFormInput,
+  type PacienteFormOutput,
+} from "@/schema/paciente.schema";
 import { maskTelefone } from "@/utils/maskTel";
 
 type Props = {
-  paciente?: UsuarioFormInput;
-  onSave: (data: UsuarioFormOutput) => Promise<void>;
+  paciente?: PacienteFormInput;
+  onSave: (data: PacienteFormOutput) => Promise<void>;
   onSuccess?: () => void;
 };
 
@@ -37,17 +37,17 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
     setValue,
     watch,
     formState: { errors },
-  } = useForm<UsuarioFormInput, any, UsuarioFormOutput>({
+  } = useForm<PacienteFormInput, any, PacienteFormOutput>({
     mode: "onChange",
-    resolver: zodResolver(usuarioSchema),
+    resolver: zodResolver(pacienteSchema),
     defaultValues: {
-      nomeusuario: "",
-      dtnascimentousuario: "",
-      codusuario: "",
-      senhausuario: "",
-      cpfusuario: "",
-      telusuario: "",
-      emailusuario: "",
+      nomepaciente: "",
+      dtnascimentopaciente: "",
+      codpaciente: "",
+      senhapaciente: "",
+      cpfpaciente: "",
+      telpaciente: "",
+      emailpaciente: "",
     },
   });
 
@@ -55,19 +55,19 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
     if (paciente) {
       reset({
         ...paciente,
-        cpfusuario: maskCPF(paciente.cpfusuario ?? ""),
-        telusuario: paciente.telusuario ? maskTelefone(paciente.telusuario) : "",
+        cpfpaciente: maskCPF(paciente.cpfpaciente ?? ""),
+        telpaciente: paciente.telpaciente ? maskTelefone(paciente.telpaciente) : "",
       });
     }
   }, [paciente, reset]);
 
-  async function handleFormSubmit(data: UsuarioFormOutput) {
+  async function handleFormSubmit(data: PacienteFormOutput) {
     try {
       setLoading(true);
       const payload = {
         ...data,
-        cpfusuario: data.cpfusuario.replace(/\D/g, ""),
-        telusuario: data.telusuario?.replace(/\D/g, ''),
+        cpfpaciente: data.cpfpaciente.replace(/\D/g, ""),
+        telpaciente: data.telpaciente?.replace(/\D/g, ''),
       };
 
       await onSave(payload);
@@ -88,51 +88,51 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
 
           <div className="grid gap-1">
             <div className="flex items-center justify-between">
-              <Label htmlFor="nomeusuario">Nome</Label>
+              <Label htmlFor="nomepaciente">Nome</Label>
               <span
-                id="nomeusuario-error"
+                id="nomepaciente-error"
                 className="text-xs text-red-600 min-h-4"
               >
-                {errors.nomeusuario?.message ?? ""}
+                {errors.nomepaciente?.message ?? ""}
               </span>
             </div>
 
             <Input
-              id="nomeusuario"
-              {...register("nomeusuario")}
+              id="nomepaciente"
+              {...register("nomepaciente")}
               placeholder="Informe o Nome"
-              aria-invalid={!!errors.nomeusuario}
-              aria-describedby="nomeusuario-error"
+              aria-invalid={!!errors.nomepaciente}
+              aria-describedby="nomepaciente-error"
             />
           </div>
 
           <div className="grid gap-1">
             <div className="flex items-center justify-between">
-              <Label htmlFor="dtnascimentousuario">Data de nascimento</Label>
+              <Label htmlFor="dtnascimentopaciente">Data de nascimento</Label>
               <span
-                id="dtnascimentousuario-error"
+                id="dtnascimentopaciente-error"
                 className="text-xs text-red-600 min-h-4"
               >
-                {errors.dtnascimentousuario?.message ?? ""}
+                {errors.dtnascimentopaciente?.message ?? ""}
               </span>
             </div>
 
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="w-full text-left">
-                  {watch("dtnascimentousuario")
-                    ? format(parseISO(watch("dtnascimentousuario")), "dd/MM/yyyy")
+                  {watch("dtnascimentopaciente")
+                    ? format(parseISO(watch("dtnascimentopaciente")), "dd/MM/yyyy")
                     : "Selecione a data"}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
                 <Calendar
                   mode="single"
-                  selected={watch("dtnascimentousuario") ? parseISO(watch("dtnascimentousuario")) : undefined}
+                  selected={watch("dtnascimentopaciente") ? parseISO(watch("dtnascimentopaciente")) : undefined}
                   onSelect={(date) => {
-                    if (date) setValue("dtnascimentousuario", format(date, "yyyy-MM-dd"))
+                    if (date) setValue("dtnascimentopaciente", format(date, "yyyy-MM-dd"))
                   }}
-                  defaultMonth={watch("dtnascimentousuario") ? parseISO(watch("dtnascimentousuario")) : undefined}
+                  defaultMonth={watch("dtnascimentopaciente") ? parseISO(watch("dtnascimentopaciente")) : undefined}
                   captionLayout="dropdown"
                   className="rounded-lg border"
                 />
@@ -142,47 +142,47 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
 
           <div className="grid gap-1">
             <div className="flex items-center justify-between">
-              <Label htmlFor="codusuario">Código</Label>
+              <Label htmlFor="codpaciente">Código</Label>
               <span
-                id="codusuario-error"
+                id="codpaciente-error"
                 className="text-xs text-red-600 min-h-4"
               >
-                {errors.codusuario?.message ?? ""}
+                {errors.codpaciente?.message ?? ""}
               </span>
             </div>
 
             <Input
-              id="codusuario"
-              {...register("codusuario", {
+              id="codpaciente"
+              {...register("codpaciente", {
                 onChange: (e) => {
                   e.target.value = e.target.value.toUpperCase();
                 }
               })}
               placeholder="Ex: ADM"
-              aria-invalid={!!errors.codusuario}
-              aria-describedby="codusuario-error"
+              aria-invalid={!!errors.codpaciente}
+              aria-describedby="codpaciente-error"
             />
           </div>
 
           <div className="grid gap-1 relative">
             <div className="flex items-center justify-between">
-              <Label htmlFor="senhausuario">Senha</Label>
+              <Label htmlFor="senhapaciente">Senha</Label>
               <span
-                id="senhausuario-error"
+                id="senhapaciente-error"
                 className="text-xs text-red-600 min-h-4"
               >
-                {errors.senhausuario?.message ?? ""}
+                {errors.senhapaciente?.message ?? ""}
               </span>
             </div>
 
             <Input
-              id="senhausuario"
+              id="senhapaciente"
               type={showPassword ? "text" : "password"}
               placeholder="Informe uma Senha"
               className="pr-10"
-              {...register("senhausuario")}
-              aria-invalid={!!errors.senhausuario}
-              aria-describedby="senhausuario-error"
+              {...register("senhapaciente")}
+              aria-invalid={!!errors.senhapaciente}
+              aria-describedby="senhapaciente-error"
             />
 
             <button
@@ -197,71 +197,71 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
 
           <div className="grid gap-1 relative">
             <div className="flex items-center justify-between">
-              <Label htmlFor="cpfusuario">CPF</Label>
+              <Label htmlFor="cpfpaciente">CPF</Label>
               <span
-                id="cpfusuario-error"
+                id="cpfpaciente-error"
                 className="text-xs text-red-600 min-h-4"
               >
-                {errors.cpfusuario?.message ?? ""}
+                {errors.cpfpaciente?.message ?? ""}
               </span>
             </div>
 
             <Input
-              id="cpfusuario"
+              id="cpfpaciente"
               placeholder="000.000.000-00"
-              {...register("cpfusuario")}
+              {...register("cpfpaciente")}
               onChange={(e) =>
-                setValue("cpfusuario", maskCPF(e.target.value))
+                setValue("cpfpaciente", maskCPF(e.target.value))
               }
-              aria-invalid={!!errors.cpfusuario}
-              aria-describedby="cpfusuario-error"
+              aria-invalid={!!errors.cpfpaciente}
+              aria-describedby="cpfpaciente-error"
             />
           </div>
 
           <div className="grid gap-1 relative">
             <div className="flex items-center justify-between">
-              <Label htmlFor="telusuario">Telefone</Label>
+              <Label htmlFor="telpaciente">Telefone</Label>
               <span
-                id="telusuario-error"
+                id="telpaciente-error"
                 className="text-xs text-red-600 min-h-4"
               >
-                {errors.telusuario?.message ?? ""}
+                {errors.telpaciente?.message ?? ""}
               </span>
             </div>
 
             <Input
-              id="telusuario"
-              {...register("telusuario")}
+              id="telpaciente"
+              {...register("telpaciente")}
               onChange={(e) => {
                 const nums = e.target.value.replace(/\D/g, "");
-                setValue("telusuario", maskTelefone(nums.slice(0, 11)));
+                setValue("telpaciente", maskTelefone(nums.slice(0, 11)));
               }}
               placeholder="(00) 00000-0000"
-              aria-invalid={!!errors.telusuario}
-              aria-describedby="telusuario-error"
+              aria-invalid={!!errors.telpaciente}
+              aria-describedby="telpaciente-error"
             />
           </div>
 
           <div className="grid gap-1 md:col-span-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="emailusuario">Email</Label>
+              <Label htmlFor="emailpaciente">Email</Label>
               <span
-                id="emailusuario-error"
+                id="emailpaciente-error"
                 className="text-xs text-red-600 min-h-4"
               >
-                {errors.emailusuario?.message ?? ""}
+                {errors.emailpaciente?.message ?? ""}
               </span>
             </div>
 
             <Input
-              id="emailusuario"
+              id="emailpaciente"
               placeholder="seu.email@exemplo.com"
-              {...register("emailusuario")}
+              {...register("emailpaciente")}
               onChange={(e) =>
-                setValue("emailusuario", e.target.value)
+                setValue("emailpaciente", e.target.value)
               }
-              aria-invalid={!!errors.cpfusuario}
-              aria-describedby="cpfusuario-error"
+              aria-invalid={!!errors.cpfpaciente}
+              aria-describedby="cpfpaciente-error"
             />
           </div>
         </CardContent>

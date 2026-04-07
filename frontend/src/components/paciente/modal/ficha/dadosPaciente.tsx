@@ -44,7 +44,7 @@ export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <span className="text-gray-600 font-medium">Nome:</span>
-            <span className="text-gray-900 font-medium">{paciente.nomeusuario}</span>
+            <span className="text-gray-900 font-medium">{paciente.nomepaciente}</span>
           </div>
 
           <Separator />
@@ -54,12 +54,12 @@ export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
               <p className="text-sm text-gray-500">Data Nasc.</p>
               <div className="flex items-center gap-2 mt-1">
                 <Calendar className="h-4 w-4 text-gray-400" />
-                <span className="text-gray-900">{formatarDataNascimento(paciente.dtnascimentousuario)}</span>
+                <span className="text-gray-900">{formatarDataNascimento(paciente.dtnascimentopaciente)}</span>
               </div>
             </div>
             <div>
               <p className="text-sm text-gray-500">Idade</p>
-              <p className="text-gray-900 font-semibold">{calcularIdade(paciente.dtnascimentousuario)} anos</p>
+              <p className="text-gray-900 font-semibold">{calcularIdade(paciente.dtnascimentopaciente)} anos</p>
             </div>
           </div>
 
@@ -68,7 +68,7 @@ export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
           <div>
             <p className="text-sm text-gray-500">CPF</p>
             <p className="text-gray-900 font-mono mt-1">
-              {maskCPF(paciente.cpfusuario)}
+              {maskCPF(paciente.cpfpaciente)}
             </p>
           </div>
 
@@ -79,11 +79,11 @@ export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
             <div className="space-y-2 mt-2">
               <div className="flex items-center gap-2 text-gray-900">
                 <Phone className="h-4 w-4 text-gray-400" />
-                {paciente.telusuario ? maskTelefone(paciente.telusuario) : "Não informado"}
+                {paciente.telpaciente ? maskTelefone(paciente.telpaciente) : "Não informado"}
               </div>
               <div className="flex items-center gap-2 text-gray-900">
                 <Mail className="h-4 w-4 text-gray-400" />
-                {paciente.emailusuario || "Não informado"}
+                {paciente.emailpaciente || "Não informado"}
               </div>
             </div>
           </div>
