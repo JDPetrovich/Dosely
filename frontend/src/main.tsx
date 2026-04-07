@@ -2,17 +2,21 @@ import './index.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Routes, Route, HashRouter } from 'react-router-dom';
+import Login from './pages/login/Login';
 import Principal from './pages/principal/Principal';
 import Remedio from './pages/remedio/remedio';
+import Alergia from './pages/alergia/alergia';
 import { Toaster } from 'sonner';
+import ProtectedRoute from './routes/protected.route';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Principal />} />
-        <Route path="/principal" element={<Principal />} />
-        <Route path="/remedio" element={<Remedio />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/principal" element={<ProtectedRoute> <Principal /></ProtectedRoute>} />
+        <Route path="/remedio" element={<ProtectedRoute><Remedio /></ProtectedRoute>} />
+        <Route path="/alergia" element={<ProtectedRoute><Alergia /></ProtectedRoute>} />
         <Route path="/configuracoes" element={
           <div className="not-found py-2 px-4">
             404 - Página não feita
