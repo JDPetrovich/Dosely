@@ -16,5 +16,11 @@ contextBridge.exposeInMainWorld("api", {
     },
     alergiasPaciente: {
         buscar: (seqpaciente: number) => ipcRenderer.invoke("retornar-paciente-alergias", seqpaciente),
-    }
+    },
+    medicamentos: {
+        buscar: () => ipcRenderer.invoke("retornar-medicamentos"),
+    },
+    medicamentosPaciente: {
+        buscar: (seqpaciente: number) => ipcRenderer.invoke("retornar-paciente-medicamentos", seqpaciente),
+    },
 });

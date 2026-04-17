@@ -1,6 +1,5 @@
 import { ipcMain } from "electron";
-import { apiFetch } from "../util/apiFetch.js";
-
+import { apiFetch } from "../../util/apiFetch.js";
 
 export function alergiaHandle() {
     ipcMain.handle("retornar-alergias", async () => {

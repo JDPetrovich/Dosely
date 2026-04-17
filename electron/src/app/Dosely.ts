@@ -3,15 +3,15 @@ import { fileURLToPath } from "url";
 import path from "path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const iconPath = app.isPackaged
+/* const iconPath = app.isPackaged
   ? path.join(process.resourcesPath, "resources/logo.png")
-  : path.join(__dirname, "../../src/resources/logo.png");
+  : path.join(__dirname, "../../src/resources/logo.png"); */
 let janela: BrowserWindow | null = null;
 
 export default function Principal() {
   janela = new BrowserWindow({
     title: "Dosely",
-    icon: iconPath,
+    //icon: iconPath,
     show: true,
     webPreferences: {
       preload: path.join(__dirname, "../preload.js"),

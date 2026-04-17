@@ -1,17 +1,21 @@
 import { app, BrowserWindow } from "electron";
 import Dosely from "./app/Dosely.js";
 import "dotenv/config";
-import { pacientehandle } from "./handlers/paciente.handle.js";
-import { alergiaHandle } from "./handlers/alergia.handle.js";
-import { alergiaPacienteHandle } from "./handlers/alergia-paciente.handle.js";
-import { usuarioHandle } from "./handlers/usuario.handle.js";
+import { alergiaPacienteHandle } from "./handlers/alergia/alergia-paciente.handle.js";
+import { alergiaHandle } from "./handlers/alergia/alergia.handle.js";
+import { pacientehandle } from "./handlers/paciente/paciente.handle.js";
+import { usuarioHandle } from "./handlers/usuario/usuario.handle.js";
+import { medicamentoHandle } from "./handlers/medicamento/medicamento.handle.js";
+import { medicamentoPacienteHandle } from "./handlers/medicamento/medicamento-paciente.handle.js";
 
 app.whenReady().then(async () => {
     Dosely();
+    usuarioHandle();
     pacientehandle();
     alergiaHandle();
     alergiaPacienteHandle();
-    usuarioHandle();
+    medicamentoHandle();
+    medicamentoPacienteHandle();
 });
 
 app.on("activate", () => {

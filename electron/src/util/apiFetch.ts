@@ -12,6 +12,7 @@ const api = wrapper(axios.create({
     jar,
     withCredentials: true,
     headers: {
+        "Content-Type": "application/json",
         "x-api-key": KEY,
     }
 }));

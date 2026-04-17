@@ -9,7 +9,6 @@ import {
   CalendarCheck,
   X,
 } from "lucide-react";
-import { useState } from "react";
 
 import { DadosPaciente } from "./dadosPaciente";
 import { AlergiasRestricoes } from "./alergiasRestricoes";
@@ -34,10 +33,6 @@ export function FichaPaciente({
 }: FichaPacienteProps) {
   //const [isContinuous, setIsContinuous] = useState(false);
   //const [isExactTime, setIsExactTime] = useState(true);
-  const [medicamentos] = useState([
-    { id: 1, nome: "Paracetamol", dosagem: "500mg", ativo: true },
-    { id: 2, nome: "Losartana", dosagem: "50mg", ativo: true },
-  ]);
 
   if (!open) return null;
 
@@ -94,7 +89,7 @@ export function FichaPaciente({
                     <div className="mt-6">
                       <TabsContent value="ativos" className="space-y-6">
                         <div className="text-center py-8 text-gray-500">
-                          <MedicamentosAtivos medicamentos={medicamentos} />
+                          <MedicamentosAtivos />
                         </div>
                       </TabsContent>
 

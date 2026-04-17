@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { apiFetch } from "../util/apiFetch.js";
+import { apiFetch } from "../../util/apiFetch.js";
 
 export function usuarioHandle() {
     ipcMain.handle("login", async (_, { login, senha }) => {

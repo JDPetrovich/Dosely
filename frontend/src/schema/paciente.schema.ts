@@ -35,57 +35,6 @@ export const pacienteSchema = z.object({
 export type PacienteFormInput = z.input<typeof pacienteSchema>;
 export type PacienteFormOutput = z.output<typeof pacienteSchema>;
 
-export const dadosMedicosSchema = z.object({
-    datanascimento: z.string().optional(),
-    emailusuario: z.string().email("Email inválido").optional().or(z.literal("")),
-    telefoneusuario: z.string().optional(),
-    alergias: z.array(z.string()).default([]),
-    doencasCronicas: z.array(z.string()).default([]),
-    historicoMedico: z.string().optional(),
-    observacoes: z.string().optional(),
-});
-
-export const medicamentoSchema = z.object({
-    id: z.number().optional(),
-    nome: z.string().min(1, "Nome do medicamento é obrigatório"),
-    dosagem: z.string().min(1, "Dosagem é obrigatória"),
-    ativo: z.boolean().default(true),
-    horariosExatos: z.array(z.string()).default([]),
-    intervaloHoras: z.number().min(1).max(24).optional(),
-    horaInicial: z.string().optional(),
-    tipoHorario: z.enum(["exato", "intervalo"]).default("exato"),
-    periodoTratamento: z.object({
-        tipo: z.enum(["continuo", "especifico"]).default("continuo"),
-        duracaoDias: z.number().optional(),
-        datasEspecificas: z.array(z.string()).default([]),
-    }).optional(),
-    quantidadeEstoque: z.number().min(0).default(0),
-    medicamentosCombo: z.array(z.number()).default([]),
-});
-
-export const remedioJudicialSchema = z.object({
-    id: z.number().optional(),
-    medicamentoId: z.number(),
-    ultimaRetirada: z.string(),
-    proximaRetirada: z.string().optional(),
-    alertaDiasAntes: z.number().default(5),
-    alertaDiarioAposVencimento: z.boolean().default(true),
-});
-
-/* export const pacienteSchema = usuarioSchema.merge(dadosMedicosSchema).extend({
-    medicamentos: z.array(medicamentoSchema).default([]),
-    remediosJudiciais: z.array(remedioJudicialSchema).default([]),
-    notificacoesAtivas: z.boolean().default(true),
-    observacoesImportantes: z.string().optional(),
-}); */
-
-export const fichaMedicaSchema = z.object({
-    sequsuario: z.number(),
-    dadosMedicos: dadosMedicosSchema.optional(),
-    medicamentos: z.array(medicamentoSchema).optional(),
-    remediosJudiciais: z.array(remedioJudicialSchema).optional(),
-});
-
 export const alergiaSchema = z.object({
     seqalergia: z.number().optional(),
     descalergia: z.string().optional(),
@@ -100,8 +49,12 @@ export const alergiaPacienteSchema = z.object({
 export type AlergiaFormInput = z.input<typeof alergiaSchema>;
 export type AlergiaFormOutput = z.output<typeof alergiaPacienteSchema>;
 
+export const medicamentoSchema = z.object({
+    seqmedicamento: z.number().optional(),
+    nomemedicamento: z.string().optional(),
+    descmedicamento: z.string().optional(),
+    dosagem: z.string().optional(),
+});
+
 export type MedicamentoFormInput = z.input<typeof medicamentoSchema>;
 export type MedicamentoFormOutput = z.output<typeof medicamentoSchema>;
-
-export type FichaMedicaFormInput = z.input<typeof fichaMedicaSchema>;
-export type FichaMedicaFormOutput = z.output<typeof fichaMedicaSchema>;

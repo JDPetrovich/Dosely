@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { apiFetch } from "../util/apiFetch.js";
+import { apiFetch } from "../../util/apiFetch.js";
 
 export function pacientehandle() {
 
@@ -13,7 +13,7 @@ export function pacientehandle() {
 
     ipcMain.handle("criar-paciente", async (_, dadosPaciente) => {
         try {
-            const data = await apiFetch("/pacientes", {
+            const data = await apiFetch("/paciente", {
                 method: "POST",
                 body: JSON.stringify(dadosPaciente),
             });
@@ -25,7 +25,7 @@ export function pacientehandle() {
 
     ipcMain.handle("atualizar-paciente", async (_, dadosPaciente) => {
         try {
-            return await apiFetch(`/pacientes/${dadosPaciente.seqpaciente}`, {
+            return await apiFetch(`/paciente/${dadosPaciente.seqpaciente}`, {
                 method: "PUT",
                 body: JSON.stringify(dadosPaciente),
             });
@@ -36,7 +36,7 @@ export function pacientehandle() {
 
     ipcMain.handle("deletar-paciente", async (_, seqpaciente: number, codpaciente: string) => {
         try {
-            return await apiFetch(`/pacientes/${seqpaciente}`, {
+            return await apiFetch(`/paciente/${seqpaciente}`, {
                 method: "DELETE",
                 body: JSON.stringify({ codpaciente }),
             });

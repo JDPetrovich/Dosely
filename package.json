@@ -82,7 +82,7 @@
           ]
         }
       ],
-      "icon": "electron/src/resources/logo.png",
+      "icon": "",
       "requestedExecutionLevel": "asInvoker"
     },
     "nsis": {

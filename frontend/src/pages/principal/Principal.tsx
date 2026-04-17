@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Header } from "@/components/header/header";
 
 import type { PacienteFormInput, PacienteFormOutput } from "@/schema/paciente.schema";
@@ -18,7 +18,7 @@ export default function Principal() {
     const [modalConfirm, setModalConfirm] = useState(false);
     const [deletar, setDeletar] = useState(false);
 
-    const carregarPacientes = async () => {
+    const carregarPacientes = useCallback(async () => {
         const respostaIpc = await window.api.pacientes.buscar();
 
         if (respostaIpc.sucesso) {
@@ -26,55 +26,84 @@ export default function Principal() {
         } else {
             console.error("Erro IPC:", respostaIpc.mensagem);
         }
+    }, []);
+
+    const criarPaciente = async (data: PacienteFormOutput) => {
+        const resposta = await window.api.pacientes.criar(data);
+
+        if (!resposta.sucesso) {
+            alert("Erro ao criar paciente: " + resposta.mensagem);
+            return;
+        }
+
+        await carregarPacientes();
+    };
+
+    const editarPaciente = async (data: PacienteFormOutput) => {
+        if (!selectedPaciente?.seqpaciente) return;
+
+        const resposta = await window.api.pacientes.atualizar({
+            ...data,
+            seqpaciente: selectedPaciente.seqpaciente
+        });
+
+        if (!resposta.sucesso) {
+            alert("Erro ao atualizar paciente: " + resposta.mensagem);
+            return;
+        }
+
+        await carregarPacientes();
     };
 
     const criarEditarPaciente = async (data: PacienteFormOutput) => {
+        try {
+            if (selectedPaciente?.seqpaciente) {
+                await editarPaciente(data);
+            } else {
+                await criarPaciente(data);
+            }
 
-        let respostaIpc;
-
-        if (selectedPaciente?.senhapaciente) {
-            respostaIpc = await window.api.pacientes.atualizar({
-                ...data,
-                seqpaciente: selectedPaciente.seqpaciente
-            });
-        } else {
-            respostaIpc = await window.api.pacientes.criar(data);
-        }
-
-        if (respostaIpc.sucesso) {
-            carregarPacientes();
             setOpen(false);
             setSelectedPaciente(null);
-        } else {
-            alert("Erro ao criar paciente: " + respostaIpc.mensagem);
+        } catch (err) {
+            console.error(err);
         }
-    }
+    };
 
     const deletarPaciente = async () => {
         if (!selectedPaciente) return;
 
-        try {
-            setDeletar(true);
-            const respostaIpc = await window.api.pacientes.deletar(selectedPaciente.seqpaciente!, selectedPaciente.codpaciente);
+        setDeletar(true);
 
-            if (respostaIpc.sucesso) {
-                setPacientes((prev) => prev.filter((p) => p.seqpaciente !== selectedPaciente.seqpaciente));
+        try {
+            const resposta = await window.api.pacientes.deletar(
+                selectedPaciente.seqpaciente!,
+                selectedPaciente.codpaciente
+            );
+
+            if (!resposta.sucesso) {
+                alert("Erro ao excluir paciente: " + resposta.mensagem);
                 setModalConfirm(false);
-            } else {
-                alert("Erro ao excluir paciente: " + respostaIpc.mensagem);
+                return;
             }
+
+            setPacientes(prev =>
+                prev.filter(p => p.seqpaciente !== selectedPaciente.seqpaciente)
+            );
+
+            setModalConfirm(false);
+
         } catch (error) {
-            console.error("Erro na comunicação IPC:", error);
+            console.error(error);
         } finally {
             setDeletar(false);
             setSelectedPaciente(null);
         }
-
-    }
+    };
 
     useEffect(() => {
         carregarPacientes();
-    }, []);
+    }, [carregarPacientes]);
 
     return (
         <div className="h-screen flex flex-col text-gray-800 overflow-hidden">
@@ -101,9 +130,9 @@ export default function Principal() {
                                 setOpen(true);
                             }} />
 
-                            {pacientes.map((p, index) => (
+                            {pacientes.map((p) => (
                                 <PacienteCard
-                                    key={index}
+                                    key={p.seqpaciente}
                                     nome={p.nomepaciente}
                                     dtnascimentopaciente={p.dtnascimentopaciente}
                                     cpf={p.cpfpaciente}

@@ -5,6 +5,10 @@ export { };
 declare global {
     interface Window {
         api: {
+            usuario: {
+                login: (dados: any) => Promise<RespostaIpc>;
+            };
+            me: () => Promise<RespostaIpc>;
             pacientes: {
                 buscar: () => Promise<RespostaIpc>;
                 criar: (dados: PacienteFormOutput) => Promise<RespostaIpc>;
@@ -17,10 +21,12 @@ declare global {
             alergiasPaciente: {
                 buscar: (seqpaciente: number) => Promise<RespostaIpc>;
             };
-            usuario: {
-                login: (dados: any) => Promise<RespostaIpc>;
+            medicamentos: {
+                buscar: () => Promise<RespostaIpc>;
             };
-            me: () => Promise<RespostaIpc>;
+            medicamentosPaciente: {
+                buscar: (seqpaciente: number) => Promise<RespostaIpc>;
+            };
         };
         config: {
             apiKey: string;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function ProtectedRoute({ children }: any) {
     const [loading, setLoading] = useState(true);
@@ -7,15 +8,21 @@ export default function ProtectedRoute({ children }: any) {
 
     useEffect(() => {
         async function check() {
-            const res = await window.api.me();
+            try {
+                const res = await window.api.me();
 
-            if (res.sucesso) {
-                setAuth(true);
-            } else {
+                if (res.sucesso) {
+                    setAuth(true);
+                } else {
+                    setAuth(false);
+                    toast.error(res.mensagem || "Erro ao verificar autenticação");
+                }
+            } catch (error) {
                 setAuth(false);
+                toast.error("Erro ao conectar com o servidor");
+            } finally {
+                setLoading(false);
             }
-
-            setLoading(false);
         }
 
         check();
