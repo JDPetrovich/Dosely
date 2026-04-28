@@ -1,10 +1,13 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("api", {
-    usuario: {
+    auth: {
         login: (dados: any) => ipcRenderer.invoke("login", dados),
+        logout: () => ipcRenderer.invoke("logout"),
+        refresh: () => ipcRenderer.invoke("refresh"),
+        me: () => ipcRenderer.invoke("me"),
+        getAccessToken: () => ipcRenderer.invoke("get-access-token"),
     },
-    me: () => ipcRenderer.invoke("me"),
     pacientes: {
         buscar: () => ipcRenderer.invoke("retornar-pacientes"),
         criar: (dados: any) => ipcRenderer.invoke("criar-paciente", dados),

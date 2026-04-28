@@ -21,7 +21,7 @@ export function Header() {
 
     useEffect(() => {
         const load = async () => {
-            const res = await window.api.me()
+            const res = await window.api.auth.me()
             setUser(res.dados)
         }
 
@@ -38,6 +38,16 @@ export function Header() {
     const location = useLocation()
     const navigate = useNavigate()
     const currentPath = location.pathname
+
+    const handleLogout = async () => {
+        try {
+            await window.api.auth.logout();
+
+            navigate("/");
+        } catch (error) {
+            navigate("/");
+        }
+    };
 
     const handleNavigate = (path: string) => {
         /* const isLeavingImportacao = currentPath === "/principal" && path !== "/principal"
@@ -104,7 +114,7 @@ export function Header() {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                                 className="text-red-600 focus:bg-red-50 focus:text-red-600 cursor-pointer"
-                                onClick={() => navigate('/')}
+                                onClick={handleLogout}
                             >
                                 <LogOut className="mr-2 h-4 w-4" />
                                 <span>Sair</span>

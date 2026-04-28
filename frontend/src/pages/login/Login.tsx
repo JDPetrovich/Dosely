@@ -17,14 +17,14 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const res = await window.api.usuario.login({ login, senha });
+            const res = await window.api.auth.login({ login, senha });
             if (!res.sucesso) {
                 setErro(res.mensagem || "Erro no login");
                 return;
             }
             navigate("/principal");
 
-        } catch (err) {
+        } catch {
             setErro("Usuário ou senha inválidos");
         } finally {
             setLoading(false);

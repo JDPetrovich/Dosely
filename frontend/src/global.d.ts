@@ -5,10 +5,13 @@ export { };
 declare global {
     interface Window {
         api: {
-            usuario: {
+            auth: {
                 login: (dados: any) => Promise<RespostaIpc>;
+                logout: () => Promise<RespostaIpc>;
+                refresh: () => Promise<RespostaIpc>;
+                me: () => Promise<RespostaIpc>;
+                getAccessToken: () => Promise<RespostaIpc>;
             };
-            me: () => Promise<RespostaIpc>;
             pacientes: {
                 buscar: () => Promise<RespostaIpc>;
                 criar: (dados: PacienteFormOutput) => Promise<RespostaIpc>;
