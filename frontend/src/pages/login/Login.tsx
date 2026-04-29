@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-//import logo from "../../assets/logo.png";
 import logoTransparente from "../../assets/logo-transparent.png";
+import { notifyAuthChange } from "../../contexts/auth.context";
 
 export default function Login() {
     const [login, setLogin] = useState("");
@@ -22,6 +22,8 @@ export default function Login() {
                 setErro(res.mensagem || "Erro no login");
                 return;
             }
+
+            notifyAuthChange(true);
             navigate("/principal");
 
         } catch {
@@ -50,10 +52,9 @@ export default function Login() {
                     <input
                         type="text"
                         value={login}
-                        onChange={(e) => setLogin(e.target.value = e.target.value.toUpperCase())}
+                        onChange={(e) => setLogin(e.target.value.toUpperCase())}
                         className="w-full border border-gray-300 rounded px-2 py-1"
                         required
-
                     />
                 </div>
 

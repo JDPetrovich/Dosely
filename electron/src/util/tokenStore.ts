@@ -9,26 +9,39 @@ let accessToken: string | null = null;
 let refreshToken: string | null = null;
 
 function persist() {
-    if (!safeStorage.isEncryptionAvailable()) return;
 
-    if (!accessToken || !refreshToken) {
-        if (fs.existsSync(FILE_PATH)) fs.unlinkSync(FILE_PATH);
+    if (!safeStorage.isEncryptionAvailable()) {
         return;
     }
 
-    const payload = JSON.stringify({
-        accessToken,
-        refreshToken,
-    });
+    if (!accessToken || !refreshToken) {
+        if (fs.existsSync(FILE_PATH)) {
+            fs.unlinkSync(FILE_PATH);
+        }
+        return;
+    }
 
-    const encrypted = safeStorage.encryptString(payload);
-    fs.writeFileSync(FILE_PATH, encrypted);
+    try {
+        const payload = JSON.stringify({
+            accessToken,
+            refreshToken,
+        });
+
+
+        const encrypted = safeStorage.encryptString(payload);
+
+        fs.writeFileSync(FILE_PATH, encrypted);
+    } catch (error) {
+        console.error("❌ [TokenStore.persist] Erro ao persistir:", error);
+    }
 }
 
 export const TokenStore = {
     set(access: string | null, refresh: string | null) {
+
         accessToken = access;
         refreshToken = refresh;
+
 
         persist();
     },
@@ -51,8 +64,14 @@ export const TokenStore = {
     },
 
     restore(): boolean {
-        if (!safeStorage.isEncryptionAvailable()) return false;
-        if (!fs.existsSync(FILE_PATH)) return false;
+
+        if (!safeStorage.isEncryptionAvailable()) {
+            return false;
+        }
+
+        if (!fs.existsSync(FILE_PATH)) {
+            return false;
+        }
 
         try {
             const encrypted = fs.readFileSync(FILE_PATH);
@@ -68,11 +87,6 @@ export const TokenStore = {
 
             accessToken = data.accessToken;
             refreshToken = data.refreshToken;
-
-            console.log("RESTORED DATA:", {
-                accessToken,
-                refreshToken
-            });
 
             return true;
         } catch (err) {

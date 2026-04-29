@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import { AuthService } from "../../services/auth.service.js";
+import { bootstrapAuth, refreshTokens } from "../../auth/bootstrapAuth.js";
 
 const authService = new AuthService();
 
@@ -14,6 +15,15 @@ export function authHandle() {
                 sucesso: false,
                 mensagem: error.message,
             };
+        }
+    });
+
+    ipcMain.handle("refresh", async () => {
+        try {
+            const success = await refreshTokens();
+            return { sucesso: success };
+        } catch (error) {
+            return { sucesso: false };
         }
     });
 

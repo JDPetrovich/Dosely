@@ -22,7 +22,11 @@ export function usuarioHandle() {
 
     ipcMain.handle("me", async () => {
         try {
-            return await apiFetch("/me");
+
+            const result = await apiFetch("/me");
+
+
+            return result;
         } catch (error: any) {
             return {
                 sucesso: false,

@@ -12,12 +12,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { LogOut, Settings } from "lucide-react"
+import { notifyAuthChange, useAuth } from "@/contexts/auth.context"
 
 
 export function Header() {
     //const [showWarn, setShowWarn] = useState(false)
     //const [nextPath, setNextPath] = useState<string | null>(null)
     const [user, setUser] = useState([] as any)
+    const { refresh } = useAuth()
 
     useEffect(() => {
         const load = async () => {
@@ -43,6 +45,7 @@ export function Header() {
         try {
             await window.api.auth.logout();
 
+            notifyAuthChange(false);
             navigate("/");
         } catch (error) {
             navigate("/");

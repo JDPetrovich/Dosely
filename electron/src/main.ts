@@ -16,7 +16,6 @@ import { TokenStore } from "./util/tokenStore.js";
 app.whenReady().then(async () => {
     Dosely();
 
-    TokenStore.restore();
     await bootstrapAuth();
 
     authHandle();
