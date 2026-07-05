@@ -1,18 +1,29 @@
 import { TokenService } from "../token/token.service.js";
 import { UsuarioRepository } from "../../repository/usuario/usuario.repository.js";
 import { UsuarioRefreshRepository } from "../../repository/usuario/usuario-refresh.repository.js";
+import { UsuarioService } from "../usuario/usuario.service.js";
+import { ILogin, ITelaUsuario } from "../../interfaces/usuario/usuario.interface.js";
 import { AppError, MensagemErro, DatabaseErrorHandler } from "../../errors/index.js";
 
-const usuarioRepo = new UsuarioRepository();
 const tokenService = new TokenService();
+const usuarioService = new UsuarioService();
+const usuarioRepo = new UsuarioRepository();
 const refreshRepo = new UsuarioRefreshRepository();
 
 export class AuthService {
-    async login(login: string, senha: string) {
+    async login(dados: ILogin) {
+        const { login, senha } = dados;
         const usuario = await usuarioRepo.buscarPorLogin(login);
 
+        if (!usuario) {
+            throw {
+                statusCode: 401,
+                mensagem: "Usuário ou senha inválidos"
+            };
+        }
+
         const senhaFake = "$2b$10$1234567890123456789012uJ8y5v5v5v5v5v5v5v5v5v5v5";
-        const hash = usuario?.senha || senhaFake;
+        const hash = usuario.senha || senhaFake;
 
         const senhaValida = await usuarioRepo.validarSenha(senha, hash);
 
@@ -137,6 +148,23 @@ export class AuthService {
         } catch (error: any) {
             throw error;
         }
+    }
+
+    async validarAcesso(sequsuario: number): Promise<ITelaUsuario> {
+        const usuario = await usuarioService.buscarUsuarioPorSeq(sequsuario);
+
+        if (!usuario) {
+            throw {
+                statusCode: 404,
+                mensagem: "Usuário não encontrado."
+            };
+        }
+
+        return {
+            sequsuario: usuario.sequsuario,
+            nome: usuario.nome,
+            email: usuario.email,
+        } as ITelaUsuario;
     }
 
     async logout(refreshToken: string): Promise<void> {

@@ -3,8 +3,8 @@ import { AuthService } from "../../services/auth/auth.service.js";
 
 const authService = new AuthService();
 
-export const authController = {
-    refresh: async (req: Request, res: Response) => {
+export class AuthController {
+    async refresh(req: Request, res: Response) {
         try {
             const { refreshToken } = req.body;
 
@@ -28,9 +28,9 @@ export const authController = {
                 mensagem: error.message,
             });
         }
-    },
+    }
 
-    logout: async (req: Request, res: Response) => {
+    async logout(req: Request, res: Response) {
         try {
             const { refreshToken } = req.body;
 
@@ -53,5 +53,27 @@ export const authController = {
                 mensagem: "Erro interno",
             });
         }
-    },
+    }
+
+    async me(req: Request, res: Response) {
+        try {
+            const reqUsuario = req.usuario;
+
+            if (!reqUsuario) {
+                return res.status(400).json({
+                    sucesso: false,
+                    mensagem: "Usuário nao autenticado",
+                });
+            }
+
+            const resultado = await authService.validarAcesso(reqUsuario.id);
+
+            return res.status(200).json({
+                sucesso: true,
+                dados: resultado
+            });
+        } catch (error) {
+
+        }
+    }
 }
