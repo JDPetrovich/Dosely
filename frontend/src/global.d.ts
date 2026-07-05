@@ -10,7 +10,6 @@ declare global {
                 logout: () => Promise<RespostaIpc>;
                 refresh: () => Promise<RespostaIpc>;
                 me: () => Promise<RespostaIpc>;
-                getAccessToken: () => Promise<RespostaIpc>;
             };
             pacientes: {
                 buscar: () => Promise<RespostaIpc>;
@@ -30,9 +29,13 @@ declare global {
             medicamentosPaciente: {
                 buscar: (seqpaciente: number) => Promise<RespostaIpc>;
             };
-        };
-        config: {
-            apiKey: string;
+            tarefas: {
+                buscar: () => Promise<RespostaIpc>;
+                criar: (descricao: string) => Promise<RespostaIpc>;
+                atualizar: (seqtarefa: number, descricao: string) => Promise<RespostaIpc>;
+                alterarStatus: (seqtarefa: number, concluido: boolean) => Promise<RespostaIpc>;
+            };
+            onApiStatus: (callback: (status: "ok" | "down") => void) => void;
         };
     };
 }

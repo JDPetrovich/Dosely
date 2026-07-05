@@ -26,4 +26,19 @@ contextBridge.exposeInMainWorld("api", {
     medicamentosPaciente: {
         buscar: (seqpaciente: number) => ipcRenderer.invoke("retornar-paciente-medicamentos", seqpaciente),
     },
+    tarefas: {
+        buscar: () => ipcRenderer.invoke("retornar-tarefas"),
+        criar: (descricao: string) => ipcRenderer.invoke("criar-tarefa", descricao),
+        atualizar: (seqtarefa: number, descricao: string) => ipcRenderer.invoke("atualizar-tarefa", seqtarefa, descricao),
+        alterarStatus: (seqtarefa: number, concluido: boolean) => ipcRenderer.invoke("alterar-status-tarefa", seqtarefa, concluido),
+    },
+    onApiStatus: (callback: (status: "ok" | "down" | "degraded") => void) => {
+        const handler = (_: any, status: "ok" | "down" | "degraded") => callback(status);
+
+        ipcRenderer.on("api-status", handler);
+
+        return () => {
+            ipcRenderer.removeListener("api-status", handler);
+        };
+    },
 });
