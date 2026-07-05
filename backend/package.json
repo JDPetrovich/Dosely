@@ -27,7 +27,6 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.99.3",
     "bcrypt": "^6.0.0",
-    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "env-paths": "^4.0.0",
     "express": "^5.2.1",
@@ -38,15 +37,12 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
-    "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.9.4",
-    "@types/supertest": "^7.2.0",
     "dotenv": "^17.3.1",
     "nodemon": "^3.1.14",
-    "supertest": "^7.2.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
