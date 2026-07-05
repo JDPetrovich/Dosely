@@ -11,7 +11,8 @@ import { pacientehandle } from "./handlers/paciente/paciente.handle.js";
 import { usuarioHandle } from "./handlers/usuario/usuario.handle.js";
 import { medicamentoHandle } from "./handlers/medicamento/medicamento.handle.js";
 import { medicamentoPacienteHandle } from "./handlers/medicamento/medicamento-paciente.handle.js";
-import { TokenStore } from "./util/tokenStore.js";
+import { startApiHealthMonitor } from "./services/auth/apiHealthMonitor.js";
+import { tarefaHandle } from "./handlers/tarefa/tarefa.handle.js";
 
 app.whenReady().then(async () => {
     Dosely();
@@ -25,6 +26,9 @@ app.whenReady().then(async () => {
     alergiaPacienteHandle();
     medicamentoHandle();
     medicamentoPacienteHandle();
+    tarefaHandle();
+
+    startApiHealthMonitor();
 });
 
 app.on("activate", () => {
