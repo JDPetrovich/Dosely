@@ -1,0 +1,54 @@
+{
+  "name": "controll-med-api",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "pm2:start": "npm run build && pm2 start ecosystem.config.cjs --update-env",
+    "pm2:dev": "pm2 start src/main.ts --name api-dev --interpreter tsx",
+    "pm2:stop": "pm2 stop api",
+    "pm2:restart": "npm run build && pm2 restart api --update-env",
+    "pm2:delete": "pm2 delete api"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JDPetrovich/Controll-Med-Api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JDPetrovich/Controll-Med-Api/issues"
+  },
+  "homepage": "https://github.com/JDPetrovich/Controll-Med-Api#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.99.3",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "env-paths": "^4.0.0",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.2",
+    "jsonwebtoken": "^9.0.3",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.9.4",
+    "@types/supertest": "^7.2.0",
+    "dotenv": "^17.3.1",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,57 @@
+import { Request, Response } from "express";
+import { AuthService } from "../../services/auth/auth.service.js";
+
+const authService = new AuthService();
+
+export const authController = {
+    refresh: async (req: Request, res: Response) => {
+        try {
+            const { refreshToken } = req.body;
+
+            if (!refreshToken) {
+                return res.status(400).json({
+                    sucesso: false,
+                    mensagem: "Refresh token não enviado",
+                });
+            }
+
+            const result = await authService.refresh(refreshToken);
+
+            return res.status(200).json({
+                sucesso: true,
+                dados: result,
+            });
+
+        } catch (error: any) {
+            return res.status(401).json({
+                sucesso: false,
+                mensagem: error.message,
+            });
+        }
+    },
+
+    logout: async (req: Request, res: Response) => {
+        try {
+            const { refreshToken } = req.body;
+
+            if (!refreshToken) {
+                return res.status(400).json({
+                    sucesso: false,
+                    mensagem: "Refresh token não enviado",
+                });
+            }
+
+            await authService.logout(refreshToken);
+
+            return res.status(200).json({
+                sucesso: true,
+            });
+
+        } catch (error: any) {
+            return res.status(500).json({
+                sucesso: false,
+                mensagem: "Erro interno",
+            });
+        }
+    },
+}
