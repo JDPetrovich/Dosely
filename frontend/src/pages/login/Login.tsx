@@ -1,31 +1,31 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logoTransparente from "../../assets/logo-transparent.png";
-import { notifyAuthChange } from "../../contexts/auth.context";
+import { useAuth } from "../../contexts/auth.context";
 
 export default function Login() {
     const [login, setLogin] = useState("");
     const [senha, setSenha] = useState("");
     const [loading, setLoading] = useState(false);
     const [erro, setErro] = useState("");
-
+    const { erro: erroAuth, clearErro, refresh } = useAuth();
     const navigate = useNavigate();
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setErro("");
+        clearErro();
         setLoading(true);
 
         try {
             const res = await window.api.auth.login({ login, senha });
             if (!res.sucesso) {
                 setErro(res.mensagem || "Erro no login");
+                setLoading(false);
                 return;
             }
-
-            notifyAuthChange(true);
+            await refresh();
             navigate("/principal");
-
         } catch {
             setErro("Usuário ou senha inválidos");
         } finally {

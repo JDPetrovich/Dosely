@@ -12,14 +12,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { LogOut, Settings } from "lucide-react"
-import { notifyAuthChange, useAuth } from "@/contexts/auth.context"
+import { useAuth } from "@/contexts/auth.context"
 
 
 export function Header() {
     //const [showWarn, setShowWarn] = useState(false)
     //const [nextPath, setNextPath] = useState<string | null>(null)
     const [user, setUser] = useState([] as any)
-    const { refresh } = useAuth()
+    const { usuario, logout } = useAuth();
 
     useEffect(() => {
         const load = async () => {
@@ -35,6 +35,7 @@ export function Header() {
         /*  { label: "Teste", path: "/teste" }, */
         { label: "Remédios", path: "/remedio" },
         { label: "Alergias", path: "/alergia" },
+        { label: "Tarefas", path: "/tarefa" },
     ]
 
     const location = useLocation()
@@ -42,14 +43,9 @@ export function Header() {
     const currentPath = location.pathname
 
     const handleLogout = async () => {
-        try {
-            await window.api.auth.logout();
-
-            notifyAuthChange(false);
-            navigate("/");
-        } catch (error) {
-            navigate("/");
-        }
+        await window.api.auth.logout();
+        logout();
+        navigate("/");
     };
 
     const handleNavigate = (path: string) => {
@@ -63,6 +59,16 @@ export function Header() {
         } */
         navigate(path)
     }
+
+    const iniciais =
+        usuario?.nome
+            ?.split(" ")
+            .map((parte) => parte[0])
+            .slice(0, 2)
+            .join("")
+            .toUpperCase() || "U";
+
+    console.log("usuario", usuario)
 
     return (
         <header className="bg-white/80  border-b border-gray-200 px-6 h-16 mb-3">
@@ -97,7 +103,7 @@ export function Header() {
                             <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 border border-teal-100 hover:bg-teal-50">
                                 <Avatar className="h-9 w-9">
                                     <AvatarImage src="https://github.com/shadcn.png" />
-                                    <AvatarFallback className="bg-teal-500 text-white">JD</AvatarFallback>
+                                    <AvatarFallback className="bg-teal-500 text-white">{iniciais}</AvatarFallback>
                                 </Avatar>
                             </Button>
                         </DropdownMenuTrigger>
@@ -105,8 +111,8 @@ export function Header() {
                         <DropdownMenuContent className="w-56 mt-2" align="end">
                             <DropdownMenuLabel className="font-normal">
                                 <div className="flex flex-col space-y-1">
-                                    <p className="text-sm font-medium">{user?.nome || 'Usuário'}</p>
-                                    <p className="text-xs text-muted-foreground italic">paciente@email.com</p>
+                                    <p className="text-sm font-medium">{usuario?.nome || ""}</p>
+                                    <p className="text-xs text-muted-foreground italic">{usuario?.email || ""}</p>
                                 </div>
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
