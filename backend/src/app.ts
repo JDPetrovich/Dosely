@@ -25,9 +25,9 @@ app.use("/api", usuarioRoutes);
 app.use("/api", authRoutes);
 
 app.use("/api", verificarAuth, pacienteRoutes);
-app.use("/api", verificarAuth, alergiaRoutes);
-app.use("/api", verificarAuth, medicamentoRoutes);
-app.use("/api", verificarAuth, tarefaRoutes);
+app.use("/api", alergiaRoutes);
+app.use("/api", medicamentoRoutes);
+app.use("/api", tarefaRoutes);
 
 app.get("/health", async (req, res) => {
     try {
