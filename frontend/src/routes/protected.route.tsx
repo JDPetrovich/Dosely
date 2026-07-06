@@ -5,7 +5,7 @@ export default function ProtectedRoute({ children }: any) {
     const { isAuthenticated, loading } = useAuth();
 
     if (loading) {
-        return <p>Carregando...</p>;
+        return;
     }
 
     if (!isAuthenticated) return <Navigate to="/" />;

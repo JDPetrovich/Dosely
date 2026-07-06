@@ -1,8 +1,9 @@
 import axios from "axios";
 import { TokenStore } from "./tokenStore.js";
 
+const API_URL = "http://localhost:3000/api";
 const api = axios.create({
-    baseURL: process.env.API_KEY,
+    baseURL: process.env.API_URL || API_URL,
     headers: {
         "Content-Type": "application/json",
     }
@@ -67,7 +68,7 @@ api.interceptors.response.use(
 
 
                 const res = await axios.post(
-                    `${process.env.API_KEY}/refresh`,
+                    `${process.env.API_URL}/refresh`,
                     { refreshToken }
                 );
 

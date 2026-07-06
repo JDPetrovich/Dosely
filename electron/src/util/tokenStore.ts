@@ -32,7 +32,7 @@ function persist() {
 
         fs.writeFileSync(FILE_PATH, encrypted);
     } catch (error) {
-        console.error("❌ [TokenStore.persist] Erro ao persistir:", error);
+        console.error("[TokenStore.persist] Erro ao persistir:", error);
     }
 }
 
