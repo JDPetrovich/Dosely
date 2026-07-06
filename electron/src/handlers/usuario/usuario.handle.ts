@@ -15,22 +15,13 @@ export function usuarioHandle() {
             }
 
             return data
-        } catch (error) {
-            return { sucesso: false, mensagem: (error as Error).message };
-        }
-    });
-
-    ipcMain.handle("me", async () => {
-        try {
-
-            const result = await apiFetch("/me");
-
-
-            return result;
         } catch (error: any) {
+            const res = error?.response?.data;
+
             return {
                 sucesso: false,
-                mensagem: error.message,
+                mensagem: res?.mensagem || "Erro ao fazer login",
+                statusCode: error?.response?.status || 500,
             };
         }
     });

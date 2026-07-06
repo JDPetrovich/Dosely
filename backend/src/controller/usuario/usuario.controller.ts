@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { AuthService } from "../../services/auth/auth.service.js";
-import { UsuarioRepository } from "../../repository/usuario/usuario.repository.js";
+import { UsuarioService } from "../../services/usuario/usuario.service.js";
 import { AppError, MensagemErro, DatabaseErrorHandler } from "../../errors/index.js";
 
 const authService = new AuthService();
-const usuarioRepo = new UsuarioRepository();
+const usuarioService = new UsuarioService();
 
-export const usuarioController = {
-    login: async (req: Request, res: Response) => {
+export class UsuarioController {
+    async login(req: Request, res: Response) {
         try {
             const { login, senha } = req.body;
 
@@ -18,7 +18,7 @@ export const usuarioController = {
                 });
             }
 
-            const resultado = await authService.login(login, senha);
+            const resultado = await authService.login({ login, senha });
 
             return res.status(200).json({
                 sucesso: true,
@@ -32,23 +32,23 @@ export const usuarioController = {
                 mensagem: error.mensagem,
             });
         }
-    },
+    }
 
-    criar: async (req: Request, res: Response) => {
+    async criarUsuario(req: Request, res: Response) {
         try {
-            const { login, senha, nome } = req.body;
+            const { nome, email, login, senha } = req.body;
 
-            if (!login || !senha || !nome) {
+            if (!nome || !email || !login || !senha) {
                 return res.status(400).json({
                     sucesso: false,
-                    mensagem: "Login, senha e nome são obrigatórios",
+                    mensagem: "Dados não preenchidos corretamente",
                 });
             }
-            const id = await usuarioRepo.criarUsuario(login, senha, nome);
+            await usuarioService.criarUsuario({ nome, email, login, senha });
 
             return res.status(201).json({
                 sucesso: true,
-                dados: { sequsuario: id, login, nome },
+                mensagem: "Usuário criado com sucesso",
             });
         }
         catch (error: any) {
@@ -57,11 +57,5 @@ export const usuarioController = {
                 mensagem: error.mensagem,
             });
         }
-    },
-
-    me: (req: Request, res: Response) => {
-        return res.status(200).json({
-            sucesso: true
-        });
     }
 };

@@ -1,14 +1,40 @@
 import bcrypt from "bcrypt";
-import IUsuario from "../../interfaces/usuario/usuario.interface.js";
+import IUsuario, { ICadastrarUsuario } from "../../interfaces/usuario/usuario.interface.js";
 import { getDatabase } from "../../module/sqlitedb/dbInstance.js";
 import { DatabaseErrorHandler } from "../../errors/index.js";
 
 const db = getDatabase();
 
 export class UsuarioRepository {
+    async buscarPorEmail(email: string): Promise<IUsuario | null> {
+        const query = `
+            SELECT sequsuario, login, senha, nome, email,
+            loginAttempts, failedBlocks, lockUntil, status
+            FROM usuario            
+            WHERE email = ?
+        `;
+
+        const params = [email];
+        const resultado = await db.consultar<IUsuario>(query, params);
+        return resultado[0] || null;
+    }
+
+    async buscarUsuarioPorSeq(sequsuario: number): Promise<IUsuario | null> {
+        const query = `
+            SELECT sequsuario, login, senha, nome, email,
+            loginAttempts, failedBlocks, lockUntil, status
+            FROM usuario
+            WHERE sequsuario = ?
+        `;
+
+        const params = [sequsuario];
+        const resultado = await db.consultar<IUsuario>(query, params);
+        return resultado[0] || null;
+    }
+
     async buscarPorLogin(login: string): Promise<IUsuario | null> {
         const query = `
-            SELECT sequsuario, login, senha, nome,
+            SELECT sequsuario, login, senha, nome, email,
             loginAttempts, failedBlocks, lockUntil, status
             FROM usuario
             WHERE login = ?
@@ -18,17 +44,17 @@ export class UsuarioRepository {
         return resultado[0] || null;
     }
 
-    async criarUsuario(login: string, senha: string, nome: string) {
-        const hash = await bcrypt.hash(senha, 10);
+    async criarUsuario(dados: ICadastrarUsuario) {
+        const { login, senha, nome, email } = dados;
         const query = `
-            INSERT INTO usuario (login, senha, nome, loginAttempts, failedBlocks, lockUntil, status)
-            VALUES (?, ?, ?, 0, 0, NULL, 'active')
+            INSERT INTO usuario (login, senha, nome, email, loginAttempts, failedBlocks, lockUntil, status)
+            VALUES (?, ?, ?, ?, 0, 0, NULL, 'active')
         `;
 
-        const parametros = [login, hash, nome];
+        const parametros = [login, senha, nome, email];
 
-        const resultado = await db.executar(query, parametros);
-        return resultado.lastID;
+        await db.executar(query, parametros);
+        return;
     }
 
     async validarSenha(senha: string, hash: string) {
