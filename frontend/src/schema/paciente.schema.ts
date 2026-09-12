@@ -3,6 +3,7 @@ import { z } from "zod";
 
 export const pacienteSchema = z.object({
     seqpaciente: z.number().optional(),
+    sequsuario: z.number().optional(),
 
     nomepaciente: z
         .string().min(1, "*Nome é obrigatório"),
@@ -11,8 +12,8 @@ export const pacienteSchema = z.object({
         .string()
         .regex(/^\d{4}-\d{2}-\d{2}$/, "*Data deve ser no formato AAAA-MM-DD"),
 
-    codpaciente: z
-        .string().min(1, "*Código é obrigatório")
+    login: z
+        .string().min(1, "*Login é obrigatório")
         .transform((v) => v.toUpperCase()),
 
     senhapaciente: z
@@ -58,3 +59,12 @@ export const medicamentoSchema = z.object({
 
 export type MedicamentoFormInput = z.input<typeof medicamentoSchema>;
 export type MedicamentoFormOutput = z.output<typeof medicamentoSchema>;
+
+export const tarefaSchema = z.object({
+    seqtarefa: z.number(),
+    descricao: z.string(),
+    concluido: z.boolean(),
+});
+
+export type TarefaFormInput = z.input<typeof tarefaSchema>;
+export type TarefaFormOutput = z.output<typeof tarefaSchema>;

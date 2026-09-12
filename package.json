@@ -18,6 +18,7 @@
   "scripts": {
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:electron": "wait-on --timeout 50000 http://localhost:5173 && electron electron/dist/main.js",
+    "dev:b": "npm --prefix backend run dev",
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:electron\"",
     "build:ts": "tsc -p electron/tsconfig.json",
     "build:frontend": "npm --prefix frontend run build",
@@ -28,7 +29,7 @@
   "dependencies": {
     "axios": "^1.14.0",
     "electron-store": "^11.0.2"
-    },
+  },
   "devDependencies": {
     "@types/electron": "^1.4.38",
     "@types/node": "^25.0.3",

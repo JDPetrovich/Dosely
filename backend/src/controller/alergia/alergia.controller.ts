@@ -3,8 +3,8 @@ import { AlergiaRepository } from "../../repository/alergia/alergia.repository.j
 
 const alergiaRepo = new AlergiaRepository();
 
-export const alergiaController = {
-    buscarTodos: async (req: Request, res: Response) => {
+export class AlergiaController {
+    async buscarTodos(req: Request, res: Response) {
         try {
             const alergias = await alergiaRepo.buscarAlergias();
             res.status(200).json({ sucesso: true, dados: alergias });

@@ -15,7 +15,7 @@ declare global {
                 buscar: () => Promise<RespostaIpc>;
                 criar: (dados: PacienteFormOutput) => Promise<RespostaIpc>;
                 atualizar: (dados: PacienteFormOutput) => Promise<RespostaIpc>;
-                deletar: (id: number, codpaciente: string) => Promise<RespostaIpc>;
+                deletar: (id: number, login: string) => Promise<RespostaIpc>;
             };
             alergias: {
                 buscar: () => Promise<RespostaIpc>;

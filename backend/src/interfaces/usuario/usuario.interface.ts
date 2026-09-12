@@ -7,9 +7,9 @@ export default interface IUsuario extends IUsuarioBase {
     sequsuario: number;
     login: string;
     senha: string;
-    loginAttempts: number;
-    failedBlocks: number;
-    lockUntil: number | null;
+    tentativas_login: number;
+    nivel_bloqueio: number;
+    bloqueado_ate: number | null;
     status: 'active' | 'locked';
 };
 

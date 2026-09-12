@@ -3,8 +3,8 @@ import { TarefaRepository } from "../../repository/tarefa/tarefa.repository.js";
 
 const tarefaRepo = new TarefaRepository();
 
-export const tarefaController = {
-    buscarTodos: async (req: Request, res: Response) => {
+export class TarefaController {
+    async buscarTodos(req: Request, res: Response) {
         try {
             const tarefas = await tarefaRepo.buscarTarefas();
             res.status(200).json({ sucesso: true, dados: tarefas });
@@ -14,9 +14,9 @@ export const tarefaController = {
                 mensagem: (error as Error).message,
             });
         }
-    },
+    }
 
-    criar: async (req: Request, res: Response) => {
+    async criar(req: Request, res: Response) {
         try {
             let descricao = req.body.descricao
             await tarefaRepo.criarTarefa(descricao);
@@ -30,9 +30,9 @@ export const tarefaController = {
                 mensagem: (error as Error).message,
             });
         }
-    },
+    }
 
-    atualizar: async (req: Request, res: Response) => {
+    async atualizar(req: Request, res: Response) {
         try {
             let seqtarefa = req.params.id
             let descricao = req.body.descricao
@@ -48,9 +48,9 @@ export const tarefaController = {
                 mensagem: (error as Error).message,
             });
         }
-    },
+    }
 
-    concluir: async (req: Request, res: Response) => {
+    async concluir(req: Request, res: Response) {
         try {
             let seqtarefa = req.params.id
             let concluido = req.body.concluido
@@ -66,5 +66,5 @@ export const tarefaController = {
                 mensagem: (error as Error).message,
             });
         }
-    },
+    }
 };

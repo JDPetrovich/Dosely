@@ -4,14 +4,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { pacienteFormInput, pacienteFormOutput } from "@/schema/paciente.schema";
+import type { PacienteFormInput, PacienteFormOutput } from "@/schema/paciente.schema";
 import { CreateUserForm } from "../form/createUserForm";
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  paciente?: pacienteFormInput | null;
-  onSave: (data: pacienteFormOutput) => Promise<void>;
+  paciente?: PacienteFormInput | null;
+  onSave: (data: PacienteFormOutput) => Promise<void>;
 };
 
 export function CreatePacienteModal({ open, onOpenChange, paciente, onSave }: Props) {

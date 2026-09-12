@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { alergiaController } from "../controller/alergia/alergia.controller.js";
-import { alergiaPacienteController } from "../controller/alergia/alergia-paciente.controller.js";
+import { AlergiaController } from "../controller/alergia/alergia.controller.js";
+import { AlergiaPacienteController } from "../controller/alergia/alergia-paciente.controller.js";
 import { verificarAuth } from "../middleware/auth.js";
-const router = Router();
 
-router.use(verificarAuth);
+const alergiaController = new AlergiaController();
+const alergiaPacienteController = new AlergiaPacienteController();
+const router = Router();
 
 router.get("/alergias", alergiaController.buscarTodos);
 /* router.post("/alergia", alergiaController.criar);

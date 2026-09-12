@@ -2,7 +2,7 @@ export default interface IPaciente {
     seqpaciente: number,
     nomepaciente: string,
     dtnascimentopaciente: string,
-    codpaciente: string,
+    login: string,
     senhapaciente: string,
     cpfpaciente: string,
     telpaciente?: string,

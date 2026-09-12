@@ -18,7 +18,6 @@ export function getDatabase() {
             "Controll_med.sqlite"
         );
 
-        console.log("Banco:", caminhoBanco);
         db = new DatabaseSQLite(caminhoBanco);
     }
 

@@ -20,6 +20,7 @@ export default function Principal() {
 
     const carregarPacientes = useCallback(async () => {
         const respostaIpc = await window.api.pacientes.buscar();
+        console.log(respostaIpc);
 
         if (respostaIpc.sucesso) {
             setPacientes(respostaIpc.dados);
@@ -29,6 +30,7 @@ export default function Principal() {
     }, []);
 
     const criarPaciente = async (data: PacienteFormOutput) => {
+        console.log("data", data);
         const resposta = await window.api.pacientes.criar(data);
 
         if (!resposta.sucesso) {
@@ -56,6 +58,7 @@ export default function Principal() {
     };
 
     const criarEditarPaciente = async (data: PacienteFormOutput) => {
+        console.log("a")
         try {
             if (selectedPaciente?.seqpaciente) {
                 await editarPaciente(data);
@@ -78,7 +81,7 @@ export default function Principal() {
         try {
             const resposta = await window.api.pacientes.deletar(
                 selectedPaciente.seqpaciente!,
-                selectedPaciente.codpaciente
+                selectedPaciente.login
             );
 
             if (!resposta.sucesso) {

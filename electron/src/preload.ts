@@ -12,7 +12,7 @@ contextBridge.exposeInMainWorld("api", {
         buscar: () => ipcRenderer.invoke("retornar-pacientes"),
         criar: (dados: any) => ipcRenderer.invoke("criar-paciente", dados),
         atualizar: (dados: any) => ipcRenderer.invoke("atualizar-paciente", dados),
-        deletar: (id: number, codpaciente: string) => ipcRenderer.invoke("deletar-paciente", id, codpaciente),
+        deletar: (id: number, login: string) => ipcRenderer.invoke("deletar-paciente", id, login),
     },
     alergias: {
         buscar: () => ipcRenderer.invoke("retornar-alergias"),

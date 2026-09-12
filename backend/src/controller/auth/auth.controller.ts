@@ -62,7 +62,7 @@ export class AuthController {
             if (!reqUsuario) {
                 return res.status(400).json({
                     sucesso: false,
-                    mensagem: "Usuário nao autenticado",
+                    mensagem: "Usuário não autenticado",
                 });
             }
 

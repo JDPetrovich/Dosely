@@ -1,5 +1,6 @@
 import sqlite3 from "sqlite3";
 import { open, type Database } from "sqlite";
+import { DatabaseErrorHandler } from "../../errors/index.js";
 
 export class DatabaseSQLite {
     private conexao: Database | undefined;
@@ -24,13 +25,31 @@ export class DatabaseSQLite {
     }
 
     async consultar<T>(sql: string, params: any[] = []): Promise<T[]> {
-        if (!this.conexao) throw new Error("Banco de dados não conectado!");
-        return await this.conexao.all<T[]>(sql, params);
+        if (!this.conexao) {
+            throw new Error("Banco de dados não conectado!")
+        };
+        try {
+            return await this.conexao.all<T[]>(sql, params);
+        } catch (error) {
+            throw DatabaseErrorHandler.handle(error as Error, "sqlite");
+        }
+    }
+
+    async consultarUm<T>(sql: string, params: any[] = []): Promise<T | null> {
+        const resultado = await this.consultar<T>(sql, params);
+        return resultado[0] ?? null;
     }
 
     async executar(sql: string, params: any[] = []) {
-        if (!this.conexao) throw new Error("Banco de dados não conectado!");
-        return await this.conexao.run(sql, params);
+        if (!this.conexao) {
+            throw new Error("Banco de dados não conectado!");
+        }
+
+        try {
+            return await this.conexao.run(sql, params);
+        } catch (error) {
+            throw DatabaseErrorHandler.handle(error as Error, "sqlite");
+        }
     }
 
     async begin() {

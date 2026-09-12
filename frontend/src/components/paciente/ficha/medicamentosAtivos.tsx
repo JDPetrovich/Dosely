@@ -15,7 +15,7 @@ import {
 import { useState, useMemo, useEffect } from "react";
 import { usePaciente } from "@/contexts/paciente.context";
 
-interface MedicamentoPacienteFlat {
+interface TratamentoFlat {
     seqmedicamentopaciente: number;
     tipo_registro: "unitario" | "combo";
     nome_principal: string | null;
@@ -70,7 +70,7 @@ export function MedicamentosAtivos({
     const [isContinuous, setIsContinuous] = useState(false);
     const { paciente } = usePaciente();
 
-    const [medicamentos, setMedicamentos] = useState<MedicamentoPacienteFlat[]>([]);
+    const [medicamentos, setMedicamentos] = useState<TratamentoFlat[]>([]);
 
     const carregarMedicamentos = async (seqpaciente: number) => {
         const respostaIpc = await window.api.medicamentosPaciente.buscar(seqpaciente);

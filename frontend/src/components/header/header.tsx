@@ -68,7 +68,6 @@ export function Header() {
             .join("")
             .toUpperCase() || "U";
 
-    console.log("usuario", usuario)
 
     return (
         <header className="bg-white/80  border-b border-gray-200 px-6 h-16 mb-3">

@@ -3,7 +3,7 @@ import { UsuarioRepository } from "../../repository/usuario/usuario.repository.j
 import { UsuarioRefreshRepository } from "../../repository/usuario/usuario-refresh.repository.js";
 import { UsuarioService } from "../usuario/usuario.service.js";
 import { ILogin, ITelaUsuario } from "../../interfaces/usuario/usuario.interface.js";
-import { AppError, MensagemErro, DatabaseErrorHandler } from "../../errors/index.js";
+import { AppError } from "../../errors/app.error.js";
 
 const tokenService = new TokenService();
 const usuarioService = new UsuarioService();
@@ -16,79 +16,87 @@ export class AuthService {
         const usuario = await usuarioRepo.buscarPorLogin(login);
 
         if (!usuario) {
-            throw {
-                statusCode: 401,
-                mensagem: "Usuário ou senha inválidos"
-            };
+            throw new AppError(
+                "Usuário ou senha inválidos.",
+                401,
+                "INVALID_CREDENTIALS"
+            );
         }
 
-        const senhaFake = "$2b$10$1234567890123456789012uJ8y5v5v5v5v5v5v5v5v5v5v5";
+        const senhaFake =
+            "$2b$10$1234567890123456789012uJ8y5v5v5v5v5v5v5v5v5v5v5";
+
         const hash = usuario.senha || senhaFake;
 
         const senhaValida = await usuarioRepo.validarSenha(senha, hash);
 
-        const loginInvalido = !usuario || !senhaValida;
+        const loginInvalido = !senhaValida;
 
-        if (loginInvalido && usuario) {
-            let { loginAttempts, failedBlocks, lockUntil } = usuario;
-            let novoStatus: 'active' | 'locked' = usuario.status;
+        if (loginInvalido) {
+            let { tentativas_login, nivel_bloqueio, bloqueado_ate } = usuario;
+            let novoStatus: "active" | "locked" = usuario.status;
 
-            loginAttempts += 1;
+            tentativas_login++;
 
-            if (loginAttempts >= 5) {
-                failedBlocks += 1;
-                loginAttempts = 0;
+            if (tentativas_login >= 5) {
+                nivel_bloqueio++;
+                tentativas_login = 0;
 
-                if (failedBlocks === 1) {
-                    lockUntil = Date.now() + 15 * 60 * 1000;
-                } else if (failedBlocks === 2) {
-                    lockUntil = Date.now() + 6 * 60 * 60 * 1000;
-                } else if (failedBlocks >= 3) {
-                    novoStatus = 'locked';
-                    lockUntil = null;
+                if (nivel_bloqueio === 1) {
+                    bloqueado_ate = Date.now() + 15 * 60 * 1000;
+                } else if (nivel_bloqueio === 2) {
+                    bloqueado_ate = Date.now() + 6 * 60 * 60 * 1000;
+                } else if (nivel_bloqueio >= 3) {
+                    novoStatus = "locked";
+                    bloqueado_ate = null;
                 }
             }
 
             await usuarioRepo.atualizarTentativas(usuario.sequsuario, {
-                loginAttempts,
-                failedBlocks,
-                lockUntil,
+                tentativas_login,
+                nivel_bloqueio,
+                bloqueado_ate,
                 status: novoStatus,
             });
         }
 
-        if (usuario) {
-            if (usuario.status === 'locked') {
-                throw {
-                    statusCode: 403,
-                    mensagem: "Conta bloqueada permanentemente. Contate o administrador.",
-                };
-            }
+        if (usuario.status === "locked") {
+            throw new AppError(
+                "Conta bloqueada permanentemente. Contate o administrador.",
+                403,
+                "ACCOUNT_LOCKED"
+            );
+        }
 
-            const lockUntil = usuario.lockUntil ? Number(usuario.lockUntil) : null;
+        const bloqueado_ate = usuario.bloqueado_ate ? Number(usuario.bloqueado_ate) : null;
 
-            if (lockUntil && lockUntil > Date.now()) {
-                const minutosRestantes = Math.ceil((lockUntil - Date.now()) / 60000);
+        if (bloqueado_ate && bloqueado_ate > Date.now()) {
+            const minutosRestantes = Math.ceil(
+                (bloqueado_ate - Date.now()) / 60000
+            );
 
-                throw {
-                    statusCode: 403,
-                    mensagem: `Tente novamente em ${minutosRestantes} minuto(s).`,
-                };
-            }
+            throw new AppError(
+                `Tente novamente em ${minutosRestantes} minuto(s).`,
+                403,
+                "ACCOUNT_TEMPORARILY_LOCKED"
+            );
         }
 
         if (loginInvalido) {
-            throw {
-                statusCode: 401,
-                mensagem: "Usuário ou senha inválidos",
-            };
+            throw new AppError(
+                "Usuário ou senha inválidos.",
+                401,
+                "INVALID_CREDENTIALS"
+            );
         }
 
+        console.log("loginValido");
+
         await usuarioRepo.atualizarTentativas(usuario.sequsuario, {
-            loginAttempts: 0,
-            failedBlocks: 0,
-            lockUntil: null,
-            status: 'active',
+            tentativas_login: 0,
+            nivel_bloqueio: 0,
+            bloqueado_ate: null,
+            status: "active",
         });
 
         const accessToken = tokenService.gerarAccessToken({
@@ -101,7 +109,7 @@ export class AuthService {
                 id: usuario.sequsuario,
                 nome: usuario.nome,
             });
-
+        console.log("aqui");
         await refreshRepo.salvar(usuario.sequsuario, refreshToken, expiraEm);
 
         return {

@@ -1,142 +1,206 @@
 import bcrypt from "bcrypt";
-import IPaciente from "../../interfaces/paciente/paciente.interface.js";
+import IPaciente, { ICadastrarPaciente, IEditarPaciente } from "../../interfaces/paciente/paciente.interface.js";
 import { getDatabase } from "../../module/sqlitedb/dbInstance.js";
 import { getSupabase } from "../../module/supabase/supabaseInstance.js";
+import { AppError } from "../../errors/app.error.js";
 
 const db = getDatabase();
 const supabase = getSupabase();
 
 export class PacienteRepository {
-    async buscarPacientes(): Promise<IPaciente[]> {
+    async buscarPacientes(sequsuario: number): Promise<IPaciente[]> {
         const query = `
-      SELECT 
-        seqpaciente,
-        nomepaciente,
-        dtnascimentopaciente,
-        codpaciente,
-        cpfpaciente,
-        telpaciente,
-        emailpaciente
-      FROM paciente
-    `;
-
-        const resultado = await db.consultar<IPaciente>(query, []);
-        return resultado;
-    }
-
-    async criarPaciente(dadosPaciente: IPaciente): Promise<void> {
-        const senha = await bcrypt.hash(dadosPaciente.senhapaciente, 10);
-
-        const queryInsert = `
-      INSERT INTO paciente (
-        nomepaciente,
-        dtnascimentopaciente,
-        codpaciente,
-        senhapaciente,
-        cpfpaciente,
-        telpaciente,
-        emailpaciente
-      ) VALUES (?,?,?,?,?,?,?)
-    `;
-
-        try {
-            await db.executar(queryInsert, [
-                dadosPaciente.nomepaciente,
-                dadosPaciente.dtnascimentopaciente,
-                dadosPaciente.codpaciente,
+            SELECT 
+                seqpaciente,
+                sequsuario,
+                nome,
+                data_nascimento,
+                login,
                 senha,
-                dadosPaciente.cpfpaciente,
-                dadosPaciente.telpaciente,
-                dadosPaciente.emailpaciente,
-            ]);
-        } catch (err) {
-            throw new Error("Erro ao criar paciente no banco local");
-        }
+                cpf,
+                tel,
+                email
+            FROM paciente
+            WHERE sequsuario = ?
+        `;
+
+        const params = [sequsuario];
+        const resultado = await db.consultar<IPaciente>(query, params);
+        return resultado;
+    };
+
+    async buscarPacientePorSeq(seqpaciente: number, sequsuario: number): Promise<IPaciente | null> {
+        const query = `
+            SELECT 
+                seqpaciente,
+                sequsuario,
+                data_nascimento,
+                login,
+                senha,
+                cpf,
+                tel,
+                email
+            FROM paciente
+            WHERE seqpaciente = ? AND sequsuario = ?    
+        `;
+
+        return db.consultarUm<IPaciente>(query, [seqpaciente, sequsuario]);
+    };
+
+    async buscarPacientePorLogin(login: string, sequsuario: number): Promise<IPaciente | null> {
+        const query = `
+            SELECT 
+                seqpaciente,
+                sequsuario,
+                data_nascimento,
+                login,
+                senha,
+                cpf,
+                tel,
+                email
+            FROM paciente
+            WHERE login = ? AND sequsuario = ?    
+        `;
+
+        return db.consultarUm<IPaciente>(query, [login, sequsuario]);
+    };
+
+    async buscarPacientePorCpf(cpf: string, sequsuario: number): Promise<IPaciente | null> {
+        const query = `
+            SELECT 
+                seqpaciente,
+                sequsuario,
+                data_nascimento,
+                login,
+                senha,
+                cpf,
+                telefone,
+                email
+            FROM paciente
+            WHERE cpf = ? AND sequsuario = ?    
+        `;
+
+        return db.consultarUm<IPaciente>(query, [cpf, sequsuario]);
+    };
+
+    async criarPaciente(dadosPaciente: ICadastrarPaciente): Promise<void> {
+        const query = `
+      INSERT INTO paciente (
+        sequsuario,
+        nome,
+        data_nascimento,
+        login,
+        senha,
+        cpf,
+        telefone,
+        email
+      ) VALUES (?,?,?,?,?,?,?,?)
+    `;
+
+        const params = [
+            dadosPaciente.sequsuario,
+            dadosPaciente.nome,
+            dadosPaciente.data_nascimento,
+            dadosPaciente.login,
+            dadosPaciente.senha,
+            dadosPaciente.cpf,
+            dadosPaciente.telefone,
+            dadosPaciente.email,
+        ]
+
+        await db.executar(query, params);
 
         try {
             const { error } = await supabase.from("pacientes").insert([
                 {
-                    nomepaciente: dadosPaciente.nomepaciente,
-                    codpaciente: dadosPaciente.codpaciente,
-                    senhapaciente: senha,
+                    nome: dadosPaciente.nome,
+                    login: dadosPaciente.login,
+                    senha: dadosPaciente.senha,
                 },
             ]);
 
             if (error) {
-                await db.executar("DELETE FROM paciente WHERE codpaciente = ?", [dadosPaciente.codpaciente]);
-                throw new Error("Erro ao espelhar no Supabase: " + error.message);
+                throw error;
             }
-        } catch (err) {
-            throw err;
+        } catch {
+            await db.executar(
+                "DELETE FROM paciente WHERE login = ?",
+                [dadosPaciente.login]
+            );
+
+            throw new AppError(
+                "Erro ao sincronizar paciente com o Supabase",
+                500,
+                "SUPABASE_SYNC_ERROR"
+            );
         }
     }
 
-    async atualizarPaciente(dadosPaciente: IPaciente): Promise<void> {
-        const query = `
-      UPDATE paciente SET 
-        nomepaciente = ?, 
-        dtnascimentopaciente = ?, 
-        codpaciente = ?, 
-        senhapaciente = ?, 
-        cpfpaciente = ?,
-        telpaciente = ?,
-        emailpaciente = ?
-      WHERE seqpaciente = ?
+    async atualizarPaciente(dadosPaciente: IEditarPaciente): Promise<void> {
+        let query = `
+        UPDATE paciente SET 
+            nome = ?, 
+            data_nascimento = ?, 
+            login = ?, 
+            cpf = ?,
+            telefone = ?,
+            email = ?
     `;
 
-        const senha = await bcrypt.hash(dadosPaciente.senhapaciente, 10);
+        const params: (string | number)[] = [
+            dadosPaciente.nome,
+            dadosPaciente.data_nascimento,
+            dadosPaciente.login,
+            dadosPaciente.cpf,
+            dadosPaciente.telefone,
+            dadosPaciente.email
+        ];
 
-        try {
-            await db.executar(query, [
-                dadosPaciente.nomepaciente,
-                dadosPaciente.dtnascimentopaciente,
-                dadosPaciente.codpaciente,
-                senha,
-                dadosPaciente.cpfpaciente,
-                dadosPaciente.telpaciente,
-                dadosPaciente.emailpaciente,
-                dadosPaciente.seqpaciente,
-            ]);
-        } catch (err) {
-            throw new Error("Erro ao atualizar paciente no banco local");
+        if (dadosPaciente.senha) {
+            query += `, senha = ? `;
+            params.push(dadosPaciente.senha);
         }
 
-        try {
-            const { error } = await supabase
-                .from("pacientes")
-                .update({
-                    nomepaciente: dadosPaciente.nomepaciente,
-                    codpaciente: dadosPaciente.codpaciente,
-                    senhapaciente: senha,
-                })
-                .eq("codpaciente", dadosPaciente.codpaciente);
+        query += `
+        WHERE seqpaciente = ? AND sequsuario = ?
+        `;
+        params.push(dadosPaciente.seqpaciente, dadosPaciente.sequsuario);
 
-            if (error) throw new Error("Erro ao espelhar no Supabase: " + error.message);
-        } catch (err) {
-            throw err;
+        await db.executar(query, params);
+
+        const { error } = await supabase
+            .from("pacientes")
+            .update({
+                nome: dadosPaciente.nome,
+                login: dadosPaciente.login,
+                senha: dadosPaciente.senha,
+            })
+            .eq("login", dadosPaciente.login);
+
+        if (error) {
+            throw new AppError(
+                "Erro ao sincronizar paciente com o Supabase.",
+                500,
+                "SUPABASE_SYNC_ERROR"
+            );
         }
     }
 
-    async deletarPaciente(seqpaciente: number, codpaciente: string): Promise<void> {
-        const query = `DELETE FROM paciente WHERE seqpaciente = ?`;
-        const parametros = [seqpaciente];
+    async deletarPaciente(sequsuario: number, seqpaciente: number, login: string): Promise<void> {
+        const query = `DELETE FROM paciente WHERE seqpaciente = ? AND sequsuario = ?`;
+        const params = [seqpaciente, sequsuario];
 
-        let resultado;
-        try {
-            resultado = await db.executar(query, parametros);
-        } catch (err) {
-            throw new Error("Erro ao deletar paciente no banco local");
-        }
-
-        if (!resultado || resultado.changes === 0) {
-            throw new Error("Paciente não encontrado");
-        }
+        await db.executar(query, params);
 
         const { error } = await supabase
             .from("pacientes")
             .delete()
-            .eq("codpaciente", codpaciente);
+            .eq("login", login);
 
-        if (error) throw new Error("Erro ao espelhar no Supabase: " + error.message);
+        if (error) throw new AppError(
+            "Erro ao sincronizar paciente com o Supabase.",
+            500,
+            "SUPABASE_SYNC_ERROR"
+        );
     }
 }

@@ -12,6 +12,7 @@ export function pacientehandle() {
     });
 
     ipcMain.handle("criar-paciente", async (_, dadosPaciente) => {
+        console.log(dadosPaciente);
         try {
             const data = await apiFetch("/paciente", {
                 method: "POST",
@@ -34,11 +35,11 @@ export function pacientehandle() {
         }
     });
 
-    ipcMain.handle("deletar-paciente", async (_, seqpaciente: number, codpaciente: string) => {
+    ipcMain.handle("deletar-paciente", async (_, seqpaciente: number, login: string) => {
         try {
             return await apiFetch(`/paciente/${seqpaciente}`, {
                 method: "DELETE",
-                body: JSON.stringify({ codpaciente }),
+                body: JSON.stringify({ login }),
             });
         } catch (error) {
             return { sucesso: false, mensagem: (error as Error).message };

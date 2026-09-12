@@ -6,12 +6,10 @@ const PORT = process.env.PORT || 3000;
 const db = getDatabase();
 
 process.on("uncaughtException", (err) => {
-  console.error("❌ uncaughtException:", err);
   process.exit(1);
 });
 
 process.on("unhandledRejection", (err) => {
-  console.error("❌ unhandledRejection:", err);
   process.exit(1);
 });
 
@@ -25,7 +23,6 @@ process.on("unhandledRejection", (err) => {
       console.log(`✅ Health check: http://localhost:${PORT}/health`);
     });
   } catch (error) {
-    console.error("❌ Erro ao iniciar:", error);
     process.exit(1);
   }
 })();

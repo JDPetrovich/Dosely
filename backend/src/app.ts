@@ -41,7 +41,6 @@ app.get("/health", async (req, res) => {
         });
 
     } catch (err) {
-        console.error("❌ Healthcheck falhou:", err);
 
         return res.status(500).json({
             status: "erro",
@@ -58,15 +57,6 @@ app.get("/crash", (req, res) => {
     setTimeout(() => {
         throw new Error("CRASH INTENCIONAL");
     }, 2000);
-});
-
-app.use((err: any, req: any, res: any, next: any) => {
-    console.error("❌ Erro interno:", err);
-
-    res.status(500).json({
-        sucesso: false,
-        mensagem: "Erro interno no servidor. Contate o suporte."
-    });
 });
 
 export default app;

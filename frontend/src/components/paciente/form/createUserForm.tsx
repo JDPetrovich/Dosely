@@ -18,6 +18,7 @@ import {
   type PacienteFormOutput,
 } from "@/schema/paciente.schema";
 import { formatarCPF, formatarTelefone } from "@/utils/formatar";
+import { useAuth } from "@/contexts/auth.context";
 
 type Props = {
   paciente?: PacienteFormInput;
@@ -42,7 +43,7 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
     defaultValues: {
       nomepaciente: "",
       dtnascimentopaciente: "",
-      codpaciente: "",
+      login: "",
       senhapaciente: "",
       cpfpaciente: "",
       telpaciente: "",
@@ -61,6 +62,7 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
   }, [paciente, reset]);
 
   async function handleFormSubmit(data: PacienteFormOutput) {
+    console.log("data2", data);
     try {
       setLoading(true);
       const payload = {
@@ -141,25 +143,25 @@ export function CreateUserForm({ paciente, onSuccess, onSave }: Props) {
 
           <div className="grid gap-1">
             <div className="flex items-center justify-between">
-              <Label htmlFor="codpaciente">Código</Label>
+              <Label htmlFor="login">Código</Label>
               <span
-                id="codpaciente-error"
+                id="login-error"
                 className="text-xs text-red-600 min-h-4"
               >
-                {errors.codpaciente?.message ?? ""}
+                {errors.login?.message ?? ""}
               </span>
             </div>
 
             <Input
-              id="codpaciente"
-              {...register("codpaciente", {
+              id="login"
+              {...register("login", {
                 onChange: (e) => {
                   e.target.value = e.target.value.toUpperCase();
                 }
               })}
               placeholder="Ex: ADM"
-              aria-invalid={!!errors.codpaciente}
-              aria-describedby="codpaciente-error"
+              aria-invalid={!!errors.login}
+              aria-describedby="login-error"
             />
           </div>
 

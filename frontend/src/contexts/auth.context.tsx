@@ -24,7 +24,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         async function checkAuth() {
             try {
                 const res = await window.api.auth.me();
-                console.log("res", res)
 
                 if (!res?.sucesso) {
                     setIsAuthenticated(false);

@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { tarefaController } from "../controller/tarefa/tarefa.controller.js";
+import { TarefaController } from "../controller/tarefa/tarefa.controller.js";
 import { verificarAuth } from "../middleware/auth.js";
-const router = Router();
 
-router.use(verificarAuth);
+const tarefaController = new TarefaController();
+const router = Router();
 
 router.get("/tarefas", tarefaController.buscarTodos);
 router.post("/tarefa", tarefaController.criar);
