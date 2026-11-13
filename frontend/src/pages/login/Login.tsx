@@ -43,8 +43,10 @@ export default function Login() {
 
                 <img src={logoTransparente} alt="Logo" />
 
-                {erro && (
-                    <p className="text-red-500 text-sm mb-3">{erro}</p>
+                {(erro || erroAuth) && (
+                    <p className="text-red-500 text-sm mb-3">
+                        {erro || erroAuth}
+                    </p>
                 )}
 
                 <div className="mb-3">

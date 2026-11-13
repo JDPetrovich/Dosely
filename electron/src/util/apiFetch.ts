@@ -67,8 +67,8 @@ api.interceptors.response.use(
                 }
 
 
-                const res = await axios.post(
-                    `${process.env.API_URL}/refresh`,
+                const res = await api.post(
+                    "/refresh",
                     { refreshToken }
                 );
 
@@ -88,7 +88,7 @@ api.interceptors.response.use(
             } catch (err) {
                 TokenStore.clear();
                 processQueue(err, null);
-                return Promise.reject(error);
+                return Promise.reject(err);
             }
         }
 

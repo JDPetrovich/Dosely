@@ -1,9 +1,10 @@
-create table public.pacientes (
-  seqpaciente uuid not null default gen_random_uuid (),
+create table public.paciente (
+  uuid uuid not null default gen_random_uuid (),
+  seqpaciente NUMERIC not null,
   nome text not null,
   login text not null unique,
   senha text null,
-  constraint pacientes_pkey primary key (seqpaciente),
+  constraint pacientes_pkey primary key (uuid),
   constraint usuario_codusuario_key unique (login)
 ) TABLESPACE pg_default;
 

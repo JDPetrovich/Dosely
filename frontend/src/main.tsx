@@ -1,7 +1,7 @@
 import './index.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Routes, Route, HashRouter, Navigate } from 'react-router-dom';
+import { Routes, Route, HashRouter } from 'react-router-dom';
 import Login from './pages/login/Login';
 import Principal from './pages/principal/Principal';
 import Remedio from './pages/remedio/remedio';

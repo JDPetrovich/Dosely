@@ -72,8 +72,11 @@ export class AuthController {
                 sucesso: true,
                 dados: resultado
             });
-        } catch (error) {
-
+        } catch (error: any) {
+            return res.status(500).json({
+                sucesso: false,
+                mensagem: "Erro interno",
+            });
         }
     }
 }

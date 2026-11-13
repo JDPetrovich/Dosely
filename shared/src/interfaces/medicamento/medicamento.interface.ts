@@ -4,12 +4,14 @@ interface IMedicamentoBase {
     dosagem: string;
 }
 
-export default interface IMedicamento extends IMedicamentoBase {
+export interface IMedicamentobody extends IMedicamentoBase { }
+
+export interface IMedicamento extends IMedicamentoBase {
     seqmedicamento: number;
     sequsuario: number;
 }
 
-export interface ICadastrarMedicamento extends IMedicamentoBase {
+export interface ICriarMedicamento extends IMedicamentoBase {
     sequsuario: number;
 }
 

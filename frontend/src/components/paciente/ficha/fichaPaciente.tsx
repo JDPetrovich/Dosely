@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -38,9 +38,9 @@ export function FichaPaciente({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+      <Card className="w-full h-full max-h-[90vh] overflow-hidden flex flex-col rounded-2xl mx-4">
 
-        <div className="flex items-center justify-between bg-white rounded-t-2xl px-6 py-4 border-b shadow-sm">
+        <CardHeader className="flex flex-row items-center justify-between border-b shadow-sm">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
               Controle de Medicamentos
@@ -57,61 +57,62 @@ export function FichaPaciente({
           >
             <X className="h-5 w-5" />
           </Button>
-        </div>
+        </CardHeader>
 
-        <div className="flex-1 overflow-y-auto bg-gray-50 rounded-b-2xl p-4 md:p-6 scrollbar">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1 space-y-6">
-              <DadosPaciente paciente={paciente} onEdit={onEdit} />
-              <AlergiasRestricoes />
-              <StatusNotificacoes />
+        <CardContent className="flex-1 min-h-0 p-4 md:p-6 overflow-hidden">
+          <div className="grid h-full min-h-0 grid-cols-1 lg:grid-cols-5 gap-6">
+
+            <div className="lg:col-span-1 min-h-0 overflow-y-auto scrollbar">
+              <div className="space-y-6">
+                <DadosPaciente paciente={paciente} onEdit={onEdit} />
+                <AlergiasRestricoes />
+                <StatusNotificacoes />
+              </div>
             </div>
 
-            <div className="lg:col-span-2 space-y-6">
-              <Card className="shadow-sm">
-                <CardHeader className="border-b">
+            <div className="lg:col-span-4 min-h-0 overflow-y-auto scrollbar">
+              <div className="space-y-6">
+                <Card className="shadow-sm">
                   <Tabs defaultValue="ativos" className="w-full">
-                    <TabsList className="grid grid-cols-3">
-                      <TabsTrigger value="ativos" className="flex items-center gap-2">
-                        <Clock3 className="h-4 w-4" />
-                        <span>Medicamentos Ativos</span>
-                      </TabsTrigger>
-                      <TabsTrigger value="judiciais" className="flex items-center gap-2">
-                        <Package className="h-4 w-4" />
-                        <span>Remédios Judiciais</span>
-                      </TabsTrigger>
-                      <TabsTrigger value="historico" className="flex items-center gap-2">
-                        <CalendarCheck className="h-4 w-4" />
-                        <span>Histórico</span>
-                      </TabsTrigger>
-                    </TabsList>
+                    <CardHeader className="border-b">
+                      <TabsList className="grid grid-cols-3">
+                        <TabsTrigger value="ativos" className="flex items-center gap-2">
+                          <Clock3 className="h-4 w-4" />
+                          <span>Medicamentos Ativos</span>
+                        </TabsTrigger>
+                        <TabsTrigger value="judiciais" className="flex items-center gap-2">
+                          <Package className="h-4 w-4" />
+                          <span>Remédios Judiciais</span>
+                        </TabsTrigger>
+                        <TabsTrigger value="historico" className="flex items-center gap-2">
+                          <CalendarCheck className="h-4 w-4" />
+                          <span>Histórico</span>
+                        </TabsTrigger>
+                      </TabsList>
+                    </CardHeader>
 
-                    <div className="mt-6">
+                    <CardContent className="">
                       <TabsContent value="ativos" className="space-y-6">
-                        <div className="text-center py-8 text-gray-500">
-                          <MedicamentosAtivos />
-                        </div>
+                        <MedicamentosAtivos />
                       </TabsContent>
 
                       <TabsContent value="judiciais">
-                        <div className="text-center py-8 text-gray-500">
-                          <RemediosJudiciais />
-                        </div>
+                        <RemediosJudiciais />
                       </TabsContent>
 
                       <TabsContent value="historico">
                         <Histórico />
                       </TabsContent>
-                    </div>
+                    </CardContent>
                   </Tabs>
-                </CardHeader>
-              </Card>
+                </Card>
 
-              <ResumoDia />
+                <ResumoDia />
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

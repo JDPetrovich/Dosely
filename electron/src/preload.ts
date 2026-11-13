@@ -1,12 +1,12 @@
 import { contextBridge, ipcRenderer } from "electron";
+import type { ITratamentoBody } from "@dosely/shared"
 
 contextBridge.exposeInMainWorld("api", {
     auth: {
         login: (dados: any) => ipcRenderer.invoke("login", dados),
         logout: () => ipcRenderer.invoke("logout"),
         refresh: () => ipcRenderer.invoke("refresh"),
-        me: () => ipcRenderer.invoke("me"),
-        getAccessToken: () => ipcRenderer.invoke("get-access-token"),
+        me: () => ipcRenderer.invoke("me")
     },
     pacientes: {
         buscar: () => ipcRenderer.invoke("retornar-pacientes"),
@@ -16,15 +16,26 @@ contextBridge.exposeInMainWorld("api", {
     },
     alergias: {
         buscar: () => ipcRenderer.invoke("retornar-alergias"),
+        criar: (descricao: string) => ipcRenderer.invoke("criar-alergia", descricao),
+        atualizar: (seqalergia: number, descricao: string) => ipcRenderer.invoke("atualizar-alergia", seqalergia, descricao),
+        deletar: (seqalergia: number) => ipcRenderer.invoke("deletar-alergia", seqalergia),
     },
     alergiasPaciente: {
         buscar: (seqpaciente: number) => ipcRenderer.invoke("retornar-paciente-alergias", seqpaciente),
+        associar: (seqpaciente: number, seqalergia: number) => ipcRenderer.invoke("associar-alergia-paciente", seqpaciente, seqalergia),
+        desassociar: (seqpaciente: number, seqalergia: number) => ipcRenderer.invoke("desassociar-alergia-paciente", seqpaciente, seqalergia),
     },
     medicamentos: {
         buscar: () => ipcRenderer.invoke("retornar-medicamentos"),
+        criar: (dados: any) => ipcRenderer.invoke("criar-medicamento", dados),
+        atualizar: (seqmedicamento: number, dados: any) => ipcRenderer.invoke("atualizar-medicamento", seqmedicamento, dados),
+        deletar: (seqmedicamento: number) => ipcRenderer.invoke("deletar-medicamento", seqmedicamento),
     },
-    medicamentosPaciente: {
-        buscar: (seqpaciente: number) => ipcRenderer.invoke("retornar-paciente-medicamentos", seqpaciente),
+    tratamentosPaciente: {
+        buscar: (seqpaciente: number) => ipcRenderer.invoke("retornar-tratamentos", seqpaciente),
+        criar: (seqpaciente: number, dados: ITratamentoBody) => ipcRenderer.invoke("criar-tratamento", seqpaciente, dados),
+        atualizar: (seqpaciente: number, seqtratamento: number, dados: ITratamentoBody) => ipcRenderer.invoke("atualizar-tratamento", seqpaciente, seqtratamento, dados),
+        deletar: (seqpaciente: number, seqtratamento: number) => ipcRenderer.invoke("deletar-tratamento", seqpaciente, seqtratamento),
     },
     tarefas: {
         buscar: () => ipcRenderer.invoke("retornar-tarefas"),

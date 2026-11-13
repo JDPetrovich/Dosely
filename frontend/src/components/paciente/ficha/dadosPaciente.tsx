@@ -44,7 +44,7 @@ export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <span className="text-gray-600 font-medium">Nome:</span>
-            <span className="text-gray-900 font-medium">{paciente.nomepaciente}</span>
+            <span className="text-gray-900 font-medium">{paciente.nome}</span>
           </div>
 
           <Separator />
@@ -54,12 +54,12 @@ export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
               <p className="text-sm text-gray-500">Data Nasc.</p>
               <div className="flex items-center gap-2 mt-1">
                 <Calendar className="h-4 w-4 text-gray-400" />
-                <span className="text-gray-900">{formatarDataNascimento(paciente.dtnascimentopaciente)}</span>
+                <span className="text-gray-900">{formatarDataNascimento(paciente.data_nascimento)}</span>
               </div>
             </div>
             <div>
               <p className="text-sm text-gray-500">Idade</p>
-              <p className="text-gray-900 font-semibold">{calcularIdade(paciente.dtnascimentopaciente)} anos</p>
+              <p className="text-gray-900 font-semibold">{calcularIdade(paciente.data_nascimento)} anos</p>
             </div>
           </div>
 
@@ -68,7 +68,7 @@ export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
           <div>
             <p className="text-sm text-gray-500">CPF</p>
             <p className="text-gray-900 font-mono mt-1">
-              {formatarCPF(paciente.cpfpaciente)}
+              {formatarCPF(paciente.cpf)}
             </p>
           </div>
 
@@ -79,11 +79,11 @@ export function DadosPaciente({ paciente, onEdit }: DadosPacienteProps) {
             <div className="space-y-2 mt-2">
               <div className="flex items-center gap-2 text-gray-900">
                 <Phone className="h-4 w-4 text-gray-400" />
-                {paciente.telpaciente ? formatarTelefone(paciente.telpaciente) : "Não informado"}
+                {paciente.telefone ? formatarTelefone(paciente.telefone) : "Não informado"}
               </div>
               <div className="flex items-center gap-2 text-gray-900">
                 <Mail className="h-4 w-4 text-gray-400" />
-                {paciente.emailpaciente || "Não informado"}
+                {paciente.email || "Não informado"}
               </div>
             </div>
           </div>

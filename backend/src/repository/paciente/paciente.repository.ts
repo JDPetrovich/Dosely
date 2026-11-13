@@ -1,5 +1,4 @@
-import bcrypt from "bcrypt";
-import IPaciente, { ICadastrarPaciente, IEditarPaciente } from "../../interfaces/paciente/paciente.interface.js";
+import type { ICriarPaciente, IEditarPaciente, IPaciente } from "@dosely/shared";
 import { getDatabase } from "../../module/sqlitedb/dbInstance.js";
 import { getSupabase } from "../../module/supabase/supabaseInstance.js";
 import { AppError } from "../../errors/app.error.js";
@@ -18,7 +17,7 @@ export class PacienteRepository {
                 login,
                 senha,
                 cpf,
-                tel,
+                telefone,
                 email
             FROM paciente
             WHERE sequsuario = ?
@@ -38,7 +37,7 @@ export class PacienteRepository {
                 login,
                 senha,
                 cpf,
-                tel,
+                telefone,
                 email
             FROM paciente
             WHERE seqpaciente = ? AND sequsuario = ?    
@@ -56,7 +55,7 @@ export class PacienteRepository {
                 login,
                 senha,
                 cpf,
-                tel,
+                telefone,
                 email
             FROM paciente
             WHERE login = ? AND sequsuario = ?    
@@ -83,19 +82,19 @@ export class PacienteRepository {
         return db.consultarUm<IPaciente>(query, [cpf, sequsuario]);
     };
 
-    async criarPaciente(dadosPaciente: ICadastrarPaciente): Promise<void> {
+    async criarPaciente(dadosPaciente: ICriarPaciente): Promise<void> {
         const query = `
-      INSERT INTO paciente (
-        sequsuario,
-        nome,
-        data_nascimento,
-        login,
-        senha,
-        cpf,
-        telefone,
-        email
-      ) VALUES (?,?,?,?,?,?,?,?)
-    `;
+            INSERT INTO paciente (
+                sequsuario,
+                nome,
+                data_nascimento,
+                login,
+                senha,
+                cpf,
+                telefone,
+                email
+            ) VALUES (?,?,?,?,?,?,?,?)
+        `;
 
         const params = [
             dadosPaciente.sequsuario,
@@ -110,9 +109,11 @@ export class PacienteRepository {
 
         await db.executar(query, params);
 
+        const paciente = await this.buscarPacientePorCpf(dadosPaciente.cpf, dadosPaciente.sequsuario);
         try {
-            const { error } = await supabase.from("pacientes").insert([
+            const { error } = await supabase.from("paciente").insert([
                 {
+                    seqpaciente: paciente?.seqpaciente,
                     nome: dadosPaciente.nome,
                     login: dadosPaciente.login,
                     senha: dadosPaciente.senha,
@@ -122,7 +123,9 @@ export class PacienteRepository {
             if (error) {
                 throw error;
             }
-        } catch {
+        } catch (error) {
+            console.error("Erro ao inserir paciente no Supabase:", error);
+
             await db.executar(
                 "DELETE FROM paciente WHERE login = ?",
                 [dadosPaciente.login]
@@ -169,13 +172,13 @@ export class PacienteRepository {
         await db.executar(query, params);
 
         const { error } = await supabase
-            .from("pacientes")
+            .from("paciente")
             .update({
                 nome: dadosPaciente.nome,
                 login: dadosPaciente.login,
                 senha: dadosPaciente.senha,
             })
-            .eq("login", dadosPaciente.login);
+            .eq("seqpaciente", dadosPaciente.seqpaciente);
 
         if (error) {
             throw new AppError(
@@ -186,16 +189,16 @@ export class PacienteRepository {
         }
     }
 
-    async deletarPaciente(sequsuario: number, seqpaciente: number, login: string): Promise<void> {
+    async deletarPaciente(sequsuario: number, seqpaciente: number): Promise<void> {
         const query = `DELETE FROM paciente WHERE seqpaciente = ? AND sequsuario = ?`;
         const params = [seqpaciente, sequsuario];
 
         await db.executar(query, params);
 
         const { error } = await supabase
-            .from("pacientes")
+            .from("paciente")
             .delete()
-            .eq("login", login);
+            .eq("seqpaciente", seqpaciente);
 
         if (error) throw new AppError(
             "Erro ao sincronizar paciente com o Supabase.",

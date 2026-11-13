@@ -126,3 +126,9 @@ CREATE TABLE IF NOT EXISTS tratamento_item (
     CHECK (quantidade > 0),
     CHECK (estoque >= 0)
 );
+
+CREATE TABLE tarefa (
+    seqtarefa INTEGER PRIMARY KEY AUTOINCREMENT,
+    descricao TEXT NOT NULL,
+    concluido INTEGER DEFAULT 0
+);

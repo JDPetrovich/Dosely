@@ -1,10 +1,10 @@
 export default interface ITelaPaciente {
     seqpaciente: number,
-    nomepaciente: string,
-    dtnascimentopaciente: string,
+    nome: string,
+    data_nascimento: string,
     login: string,
-    cpfpaciente: string,
-    telpaciente?: string,
-    emailpaciente?: string
+    cpf: string,
+    telefone?: string,
+    email?: string
 }
 

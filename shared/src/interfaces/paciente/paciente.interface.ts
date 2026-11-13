@@ -6,21 +6,23 @@ interface IPacienteBase {
     email: string;
 }
 
-export default interface IPaciente extends IPacienteBase {
-    seqpaciente: number;
-    sequsuario: number; 
+export interface IPacienteBody extends IPacienteBase {
     login: string;
     senha: string;
+}
+
+export interface IPaciente extends IPacienteBody {
+    seqpaciente: number;
+    sequsuario: number;
 }
 
 export interface ITelaPaciente extends IPacienteBase {
     seqpaciente: number;
+    login: string;
 }
 
-export interface ICadastrarPaciente extends IPacienteBase {
+export interface ICriarPaciente extends IPacienteBody {
     sequsuario: number;
-    login: string;
-    senha: string;
 }
 
 export interface IEditarPaciente extends IPacienteBase {
@@ -30,7 +32,7 @@ export interface IEditarPaciente extends IPacienteBase {
     senha?: string;
 }
 
-export interface ILoginPaciente {
+export interface Ilogin {
     login: string;
     senha: string;
 }

@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from "react";
 
 type Paciente = {
     seqpaciente: number;
-    nompaciente: string;
+    nome: string;
 }
 
 type PacienteContextType = {

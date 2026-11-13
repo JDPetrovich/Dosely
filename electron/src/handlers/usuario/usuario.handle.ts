@@ -20,7 +20,7 @@ export function usuarioHandle() {
 
             return {
                 sucesso: false,
-                mensagem: res?.mensagem || "Erro ao fazer login",
+                mensagem: res?.mensagem ?? res?.message ?? "Erro ao fazer login",
                 statusCode: error?.response?.status || 500,
             };
         }

@@ -1,5 +1,5 @@
 import { AppError } from "../../errors/app.error.js";
-import IMedicamento, { ICadastrarMedicamento, IEditarMedicamento } from "../../interfaces/medicamento/medicamento.interface.js";
+import type { ICriarMedicamento, IEditarMedicamento, IMedicamento } from "@dosely/shared";
 import { MedicamentoRepository } from "../../repository/medicamento/medicamento.repository.js";
 
 const medicamentoRepo = new MedicamentoRepository();
@@ -11,7 +11,7 @@ export class MedicamentoService {
         return medicamentos;
     }
 
-    async criarMedicamento(medicamento: ICadastrarMedicamento) {
+    async criarMedicamento(medicamento: ICriarMedicamento) {
         const medicamentoExistentes = await medicamentoRepo.buscarMedicamentos(medicamento.sequsuario);
 
         const medicamentoExistente = medicamentoExistentes.some(

@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
 import { PacienteService } from "../../services/paciente/paciente.service.js";
 import { AppError } from "../../errors/app.error.js";
-import { ICadastrarPaciente, IEditarPaciente } from "../../interfaces/paciente/paciente.interface.js";
+import type { ICriarPaciente, IEditarPaciente, IPacienteBody } from "@dosely/shared";
 
 const pacienteService = new PacienteService();
+
+interface PacienteParams {
+    seqpaciente: string;
+}
+
 export class PacienteController {
     async buscarTodosPacientes(req: Request, res: Response) {
         const usuario = req.usuario
@@ -20,11 +25,10 @@ export class PacienteController {
         res.status(200).json({ sucesso: true, dados: pacientes });
     }
 
-    async criarPaciente(req: Request, res: Response) {
-        const { nome, data_nascimento, login, senha, cpf, telefone, email } = req.body
-        const sequsuario = req.usuario
+    async criarPaciente(req: Request<{}, {}, IPacienteBody>, res: Response) {
+        const usuario = req.usuario
 
-        if (!sequsuario) {
+        if (!usuario) {
             throw new AppError(
                 "Usuário não autenticado",
                 401,
@@ -32,23 +36,9 @@ export class PacienteController {
             )
         }
 
-        if (!nome || !data_nascimento || !login || !senha || !cpf || !telefone || !email) {
-            throw new AppError(
-                "Campo obrigatório não preenchido.",
-                400,
-                "INVALID_DATA"
-            )
-        }
-
-        const dados: ICadastrarPaciente = {
-            sequsuario: sequsuario.id,
-            nome,
-            data_nascimento,
-            login,
-            senha,
-            cpf,
-            telefone,
-            email
+        const dados: ICriarPaciente = {
+            ...req.body,
+            sequsuario: usuario.id
         }
 
         await pacienteService.criarPaciente(dados);
@@ -59,12 +49,11 @@ export class PacienteController {
 
     }
 
-    async atualizarPaciente(req: Request, res: Response) {
-        const { nome, data_nascimento, login, senha, cpf, telefone, email } = req.body
-        const seqpaciente = Number(req.params.id)
-        const sequsuario = req.usuario
+    async atualizarPaciente(req: Request<PacienteParams, {}, IPacienteBody>, res: Response) {
+        const seqpaciente = Number(req.params.seqpaciente);
+        const usuario = req.usuario
 
-        if (!sequsuario) {
+        if (!usuario) {
             throw new AppError(
                 "Usuário não autenticado",
                 401,
@@ -72,32 +61,18 @@ export class PacienteController {
             )
         }
 
-        if (!seqpaciente) {
+        if (!Number.isInteger(seqpaciente) || seqpaciente <= 0) {
             throw new AppError(
-                "Paciente não encontrado",
-                404,
-                "PACIENTE_NOT_FOUND"
-            )
-        }
-
-        if (!nome || !data_nascimento || !login || !senha || !cpf || !telefone || !email) {
-            throw new AppError(
-                "Campo obrigatório não preenchido.",
+                "O identificador do paciente é inválido.",
                 400,
-                "INVALID_DATA"
-            )
+                "INVALID_PATIENT_ID"
+            );
         }
 
         const dados: IEditarPaciente = {
-            sequsuario: sequsuario.id,
-            seqpaciente,
-            nome,
-            data_nascimento,
-            login,
-            senha,
-            cpf,
-            telefone,
-            email
+            ...req.body,
+            sequsuario: usuario.id,
+            seqpaciente
         }
 
         await pacienteService.atualizarPaciente(dados);
@@ -108,12 +83,12 @@ export class PacienteController {
 
     }
 
-    async deletarPaciente(req: Request, res: Response) {
+    async deletarPaciente(req: Request<PacienteParams>, res: Response) {
         try {
-            const seqpaciente = Number(req.params.id)
-            const sequsuario = req.usuario;
+            const seqpaciente = Number(req.params.seqpaciente);
+            const usuario = req.usuario;
 
-            if (!sequsuario) {
+            if (!usuario) {
                 throw new AppError(
                     "Usuário não autenticado.",
                     401,
@@ -121,15 +96,15 @@ export class PacienteController {
                 )
             }
 
-            if (!seqpaciente) {
+            if (!Number.isInteger(seqpaciente) || seqpaciente <= 0) {
                 throw new AppError(
-                    "Paciente não fornecido.",
-                    404,
-                    "PACIENTE_NOT_FOUND"
-                )
+                    "O identificador do paciente é inválido.",
+                    400,
+                    "INVALID_PATIENT_ID"
+                );
             }
 
-            await pacienteService.deletarPaciente(sequsuario.id, seqpaciente);
+            await pacienteService.deletarPaciente(usuario.id, seqpaciente);
 
             res.status(200).json({
                 sucesso: true,

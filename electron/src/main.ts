@@ -10,12 +10,11 @@ import { alergiaHandle } from "./handlers/alergia/alergia.handle.js";
 import { pacientehandle } from "./handlers/paciente/paciente.handle.js";
 import { usuarioHandle } from "./handlers/usuario/usuario.handle.js";
 import { medicamentoHandle } from "./handlers/medicamento/medicamento.handle.js";
-import { medicamentoPacienteHandle } from "./handlers/medicamento/medicamento-paciente.handle.js";
+import { tratamentoPacienteHandle } from "./handlers/tratamento/tratamento.handle.js";
 import { startApiHealthMonitor } from "./services/auth/apiHealthMonitor.js";
 import { tarefaHandle } from "./handlers/tarefa/tarefa.handle.js";
 
 app.whenReady().then(async () => {
-    Dosely();
 
     await bootstrapAuth();
 
@@ -25,10 +24,11 @@ app.whenReady().then(async () => {
     alergiaHandle();
     alergiaPacienteHandle();
     medicamentoHandle();
-    medicamentoPacienteHandle();
+    tratamentoPacienteHandle();
     tarefaHandle();
 
     startApiHealthMonitor();
+    Dosely();
 });
 
 app.on("activate", () => {

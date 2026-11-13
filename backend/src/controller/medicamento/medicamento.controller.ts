@@ -1,9 +1,13 @@
 import { Request, Response } from "express";
 import { MedicamentoService } from "../../services/medicamento/medicamento.service.js";
 import { AppError } from "../../errors/app.error.js";
-import { ICadastrarMedicamento, IEditarMedicamento } from "../../interfaces/medicamento/medicamento.interface.js";
+import type { ICriarMedicamento, IEditarMedicamento, IMedicamentobody } from "@dosely/shared";
 
 const medicamentoService = new MedicamentoService();
+
+interface MedicamentoParams {
+    seqmedicamento: string;
+}
 
 export class MedicamentoController {
     async buscarMedicamentos(req: Request, res: Response) {
@@ -21,8 +25,7 @@ export class MedicamentoController {
         res.status(200).json({ sucesso: true, dados: medicamentos });
     }
 
-    async criarMedicamento(req: Request, res: Response) {
-        const { nome, descricao, dosagem } = req.body;
+    async criarMedicamento(req: Request<{}, {}, IMedicamentobody>, res: Response) {
         const usuario = req.usuario;
 
         if (!usuario) {
@@ -33,19 +36,9 @@ export class MedicamentoController {
             )
         }
 
-        if (!nome || !descricao || !dosagem) {
-            throw new AppError(
-                "Campo obrigatório não preenchido.",
-                400,
-                "INVALID_DATA"
-            )
-        }
-
-        const dados: ICadastrarMedicamento = {
-            sequsuario: usuario.id,
-            nome,
-            descricao,
-            dosagem,
+        const dados: ICriarMedicamento = {
+            ...req.body,
+            sequsuario: usuario.id
         }
 
         await medicamentoService.criarMedicamento(dados);
@@ -55,9 +48,8 @@ export class MedicamentoController {
         });
     }
 
-    async atualizarMedicamento(req: Request, res: Response) {
-        const { seqmedicamento } = req.params;
-        const { nome, descricao, dosagem } = req.body;
+    async atualizarMedicamento(req: Request<MedicamentoParams, {}, IMedicamentobody>, res: Response) {
+        const seqmedicamento = Number(req.params.seqmedicamento);
         const usuario = req.usuario;
 
         if (!usuario) {
@@ -68,7 +60,7 @@ export class MedicamentoController {
             )
         }
 
-        if (!seqmedicamento) {
+        if (!Number.isInteger(seqmedicamento) || seqmedicamento <= 0) {
             throw new AppError(
                 "Medicamento não fornecido",
                 404,
@@ -76,20 +68,10 @@ export class MedicamentoController {
             )
         }
 
-        if (!nome || !descricao || !dosagem) {
-            throw new AppError(
-                "Campo obrigatório não preenchido.",
-                400,
-                "INVALID_DATA"
-            )
-        }
-
         const dados: IEditarMedicamento = {
-            seqmedicamento: Number(seqmedicamento),
-            sequsuario: usuario.id,
-            nome,
-            descricao,
-            dosagem,
+            ...req.body,
+            seqmedicamento,
+            sequsuario: usuario.id
         }
 
         await medicamentoService.atualizarMedicamento(dados);
@@ -99,8 +81,8 @@ export class MedicamentoController {
         });
     }
 
-    async deletarMedicamento(req: Request, res: Response) {
-        const { seqmedicamento } = req.params;
+    async deletarMedicamento(req: Request<MedicamentoParams>, res: Response) {
+        const seqmedicamento = Number(req.params.seqmedicamento);
         const usuario = req.usuario;
 
         if (!usuario) {
@@ -111,7 +93,7 @@ export class MedicamentoController {
             )
         }
 
-        if (!seqmedicamento) {
+        if (!Number.isInteger(seqmedicamento) || seqmedicamento <= 0) {
             throw new AppError(
                 "Medicamento não fornecido",
                 404,
@@ -119,7 +101,7 @@ export class MedicamentoController {
             )
         }
 
-        await medicamentoService.deletarMedicamento(Number(seqmedicamento), usuario.id);
+        await medicamentoService.deletarMedicamento(seqmedicamento, usuario.id);
         res.status(200).json({
             sucesso: true,
             mensagem: "Medicamento deletado com sucesso!"

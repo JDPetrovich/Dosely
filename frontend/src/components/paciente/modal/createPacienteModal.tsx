@@ -11,7 +11,7 @@ type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   paciente?: PacienteFormInput | null;
-  onSave: (data: PacienteFormOutput) => Promise<void>;
+  onSave: (data: PacienteFormOutput) => Promise<boolean>;
 };
 
 export function CreatePacienteModal({ open, onOpenChange, paciente, onSave }: Props) {

@@ -1,4 +1,4 @@
-import IMedicamento, { ICadastrarMedicamento, IEditarMedicamento } from "../../interfaces/medicamento/medicamento.interface.js";
+import type { ICriarMedicamento, IEditarMedicamento, IMedicamento } from "@dosely/shared";
 import { getDatabase } from "../../module/sqlitedb/dbInstance.js";
 
 const db = getDatabase();
@@ -36,7 +36,7 @@ export class MedicamentoRepository {
     return resultado[0];
   }
 
-  async criarMedicamento(medicamento: ICadastrarMedicamento) {
+  async criarMedicamento(medicamento: ICriarMedicamento) {
     const query = `
     INSERT INTO medicamento(
       sequsuario,

@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useEffect, useState } from "react"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,17 +17,7 @@ import { useAuth } from "@/contexts/auth.context"
 export function Header() {
     //const [showWarn, setShowWarn] = useState(false)
     //const [nextPath, setNextPath] = useState<string | null>(null)
-    const [user, setUser] = useState([] as any)
     const { usuario, logout } = useAuth();
-
-    useEffect(() => {
-        const load = async () => {
-            const res = await window.api.auth.me()
-            setUser(res.dados)
-        }
-
-        load()
-    }, [])
 
     const menuItems = [
         { label: "Principal", path: "/principal" },

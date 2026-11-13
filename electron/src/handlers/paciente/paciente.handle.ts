@@ -6,21 +6,30 @@ export function pacientehandle() {
     ipcMain.handle("retornar-pacientes", async () => {
         try {
             return await apiFetch("/pacientes");
-        } catch (error) {
-            return { sucesso: false, mensagem: (error as Error).message };
+        } catch (error: any) {
+            const res = error?.response?.data;
+            return {
+                sucesso: false,
+                mensagem: res?.message || "Erro ao buscar pacientes.",
+                statusCode: error?.response?.status || 500,
+            };
         }
     });
 
     ipcMain.handle("criar-paciente", async (_, dadosPaciente) => {
-        console.log(dadosPaciente);
         try {
             const data = await apiFetch("/paciente", {
                 method: "POST",
                 body: JSON.stringify(dadosPaciente),
             });
             return data;
-        } catch (error) {
-            return { sucesso: false, mensagem: (error as Error).message };
+        } catch (error: any) {
+            const res = error?.response?.data;
+            return {
+                sucesso: false,
+                mensagem: res?.message || "Erro ao criar paciente.",
+                statusCode: error?.response?.status || 500,
+            };
         }
     });
 
@@ -30,8 +39,13 @@ export function pacientehandle() {
                 method: "PUT",
                 body: JSON.stringify(dadosPaciente),
             });
-        } catch (error) {
-            return { sucesso: false, mensagem: (error as Error).message };
+        } catch (error: any) {
+            const res = error?.response?.data;
+            return {
+                sucesso: false,
+                mensagem: res?.message || "Erro ao atualizar paciente.",
+                statusCode: error?.response?.status || 500,
+            };
         }
     });
 
@@ -41,8 +55,13 @@ export function pacientehandle() {
                 method: "DELETE",
                 body: JSON.stringify({ login }),
             });
-        } catch (error) {
-            return { sucesso: false, mensagem: (error as Error).message };
+        } catch (error: any) {
+            const res = error?.response?.data;
+            return {
+                sucesso: false,
+                mensagem: res?.message || "Erro ao deletar paciente.",
+                statusCode: error?.response?.status || 500,
+            };
         }
     });
 }

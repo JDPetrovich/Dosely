@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { PacienteRepository } from "../../repository/paciente/paciente.repository.js";
 import { AppError } from "../../errors/app.error.js";
-import { ICadastrarPaciente, IEditarPaciente, ITelaPaciente } from "../../interfaces/paciente/paciente.interface.js";
+import type { ICriarPaciente, IEditarPaciente, ITelaPaciente } from "@dosely/shared";
 
 const pacienteRepo = new PacienteRepository();
 
@@ -20,11 +20,11 @@ export class PacienteService {
         }));
     }
 
-    async criarPaciente(dadosPaciente: ICadastrarPaciente): Promise<void> {
+    async criarPaciente(dadosPaciente: ICriarPaciente): Promise<void> {
         const codExists = await pacienteRepo.buscarPacientePorLogin(dadosPaciente.login, dadosPaciente.sequsuario);
         if (codExists) {
             throw new AppError(
-                "Ja existe um paciente com esse login",
+                "Já existe um paciente com esse login",
                 409,
                 "LOGIN_ALREADY_EXISTS"
             );
@@ -32,8 +32,9 @@ export class PacienteService {
 
         const cpfExists = await pacienteRepo.buscarPacientePorCpf(dadosPaciente.cpf, dadosPaciente.sequsuario);
         if (cpfExists) {
+            console.log("cpfExists", cpfExists);
             throw new AppError(
-                "Ja existe um paciente com esse CPF",
+                "Já existe um paciente com esse CPF",
                 409,
                 "CPF_ALREADY_EXISTS"
             );
@@ -52,24 +53,6 @@ export class PacienteService {
                 "Paciente não encontrado",
                 404,
                 "PACIENTE_NOT_FOUND"
-            );
-        }
-
-        const codExists = await pacienteRepo.buscarPacientePorLogin(dadosPaciente.login, dadosPaciente.sequsuario);
-        if (codExists) {
-            throw new AppError(
-                "Ja existe um paciente com esse login",
-                409,
-                "LOGIN_ALREADY_EXISTS"
-            );
-        }
-
-        const cpfExists = await pacienteRepo.buscarPacientePorCpf(dadosPaciente.cpf, dadosPaciente.sequsuario);
-        if (cpfExists) {
-            throw new AppError(
-                "Ja existe um paciente com esse CPF",
-                409,
-                "CPF_ALREADY_EXISTS"
             );
         }
 
@@ -93,8 +76,6 @@ export class PacienteService {
             );
         }
 
-        let login = pacienteExists.login;
-
-        await pacienteRepo.deletarPaciente(sequsuario, seqpaciente, login);
+        await pacienteRepo.deletarPaciente(sequsuario, seqpaciente);
     }
 }
