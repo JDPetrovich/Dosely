@@ -8,62 +8,48 @@ export interface ErrorResponse {
 }
 
 export class ErrorHandler {
-  static getErrorResponse(error: unknown): ErrorResponse {
-    if (error instanceof AppError) {
-      const response: ErrorResponse = {
-        success: false,
-        message: error.message,
-      };
-
-      if (error.code) {
-        response.code = error.code;
-      }
-
-      return response;
-    }
-
-    return {
-      success: false,
-      message: "Erro interno do servidor. Por favor, tente novamente mais tarde.",
-    };
-  }
-
-  static middleware = (
+  static middleware(
     error: unknown,
     req: Request,
     res: Response,
     next: NextFunction
-  ) => {
-    let statusCode = 500;
+  ) {
+    const statusCode =
+      error instanceof AppError
+        ? error.statusCode
+        : 500;
+
+    ErrorHandler.log(error, statusCode);
+
+    res
+      .status(statusCode)
+      .json(ErrorHandler.buildResponse(error));
+  }
+
+  private static buildResponse(error: unknown): ErrorResponse {
     if (error instanceof AppError) {
-      statusCode = error.statusCode;
+      return {
+        success: false,
+        message: error.message,
+        code: error.code
+      };
     }
 
-    const response = ErrorHandler.getErrorResponse(error);
+    return {
+      success: false,
+      message: "Erro interno do servidor."
+    };
+  }
 
-    ErrorHandler.logError(error, statusCode);
-
-    if (process.env.NODE_ENV !== "production" && !(error instanceof AppError)) {
-      console.error("Stack trace:", error instanceof Error ? error.stack : error);
-    }
-
-    res.status(statusCode).json(response);
-  };
-
-  private static logError(error: unknown, statusCode: number): void {
-    if (statusCode < 500) return;
+  private static log(error: unknown, statusCode: number) {
+    if (statusCode < 500)
+      return;
 
     if (error instanceof Error) {
       console.error(`[ERROR] ${error.message}`);
       console.error(error.stack);
     } else {
-      console.error("[ERROR]", error);
+      console.error(error);
     }
   }
 }
-
-export const asyncHandler =
-  (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch(next);
-  };

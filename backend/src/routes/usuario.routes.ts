@@ -1,14 +1,11 @@
 import { Router } from "express";
 import { limiter } from "../util/limiter.js";
+import { UsuarioController } from "../controller/usuario/usuario.controller.js";
 
-import { usuarioController } from "../controller/usuario/usuario.controller.js";
-import { verificarAuth } from "../middleware/auth.js";
-
+const usuarioController = new UsuarioController();
 const router = Router();
 
-router.get("/me", verificarAuth, usuarioController.me);
-
 router.post("/login", limiter, usuarioController.login);
-router.post("/usuario", usuarioController.criar);
+router.post("/usuario", usuarioController.criarUsuario);
 
 export default router;

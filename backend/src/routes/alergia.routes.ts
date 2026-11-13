@@ -1,19 +1,18 @@
 import { Router } from "express";
-import { alergiaController } from "../controller/alergia/alergia.controller.js";
-import { alergiaPacienteController } from "../controller/alergia/alergia-paciente.controller.js";
-import { verificarAuth } from "../middleware/auth.js";
+import { AlergiaController } from "../controller/alergia/alergia.controller.js";
+import { AlergiaPacienteController } from "../controller/alergia/alergia-paciente.controller.js";
+
+const alergiaController = new AlergiaController();
+const alergiaPacienteController = new AlergiaPacienteController();
 const router = Router();
 
-router.use(verificarAuth);
-
 router.get("/alergias", alergiaController.buscarTodos);
-/* router.post("/alergia", alergiaController.criar);
-router.put("/alergia/:id", alergiaController.atualizar);
-router.delete("/alergia/:id", alergiaController.deletar); */
+router.post("/alergia", alergiaController.criar);
+router.put("/alergia/:seqalergia", alergiaController.atualizar);
+router.delete("/alergia/:seqalergia", alergiaController.deletar);
 
-router.get("/alergias/paciente/:id", alergiaPacienteController.buscarTodos);
-/* router.post("/alergia/paciente/:id", alergiaPacienteController.criar);
-router.put("/alergia/paciente/:id", alergiaPacienteController.atualizar);
-router.delete("/alergia/paciente/:id", alergiaPacienteController.deletar); */
+router.get("/alergias/paciente/:seqpaciente", alergiaPacienteController.buscarTodos);
+router.post("/alergias/paciente/:seqpaciente", alergiaPacienteController.associar);
+router.delete("/alergias/paciente/:seqpaciente/:seqalergia", alergiaPacienteController.desassociar);
 
 export default router;

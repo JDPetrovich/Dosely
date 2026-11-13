@@ -1,6 +1,12 @@
 {
   "name": "dosely",
   "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared"
+  ],
   "description": "",
   "main": "electron/dist/main.js",
   "repository": {
@@ -18,22 +24,19 @@
   "scripts": {
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:electron": "wait-on --timeout 50000 http://localhost:5173 && electron electron/dist/main.js",
+    "dev:b": "npm --prefix backend run dev",
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:electron\"",
     "build:ts": "tsc -p electron/tsconfig.json",
     "build:frontend": "npm --prefix frontend run build",
-    "build": "npm run build:ts && npm run build:frontend",
+    "build:shared": "npm --prefix shared run build",
+    "build": "npm run build:shared && npm run build:ts && npm run build:frontend",
     "start": "electron electron/dist/main.js",
     "dist": "npx electron-builder --win"
   },
   "dependencies": {
-    "@azure/msal-node": "^3.8.4",
-    "@supabase/supabase-js": "^2.90.1",
     "axios": "^1.14.0",
-    "axios-cookiejar-support": "^6.0.5",
     "electron-store": "^11.0.2",
-    "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7",
-    "tough-cookie": "^6.0.1"
+    "@dosely/shared": "*"
   },
   "devDependencies": {
     "@types/electron": "^1.4.38",
@@ -91,5 +94,11 @@
       "shortcutName": "Dosely"
     },
     "publish": null
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true,
+    "electron@39.8.10": true,
+    "esbuild@0.28.2": true,
+    "sqlite3@6.0.1": true
   }
 }

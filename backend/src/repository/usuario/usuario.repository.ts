@@ -1,34 +1,58 @@
 import bcrypt from "bcrypt";
-import IUsuario from "../../interfaces/usuario/usuario.interface.js";
+import IUsuario, { ICadastrarUsuario } from "../../interfaces/usuario/usuario.interface.js";
 import { getDatabase } from "../../module/sqlitedb/dbInstance.js";
-import { DatabaseErrorHandler } from "../../errors/index.js";
 
 const db = getDatabase();
 
 export class UsuarioRepository {
+    async buscarPorEmail(email: string): Promise<IUsuario | null> {
+        const query = `
+            SELECT sequsuario, login, senha, nome, email,
+            tentativas_login, nivel_bloqueio, bloqueado_ate, status
+            FROM usuario            
+            WHERE email = ?
+        `;
+
+        const params = [email];
+        const resultado = await db.consultar<IUsuario>(query, params);
+        return resultado[0] || null;
+    }
+
+    async buscarUsuarioPorSeq(sequsuario: number): Promise<IUsuario | null> {
+        const query = `
+            SELECT sequsuario, login, senha, nome, email,
+            tentativas_login, nivel_bloqueio, bloqueado_ate, status
+            FROM usuario
+            WHERE sequsuario = ?
+        `;
+
+        const params = [sequsuario];
+        const resultado = await db.consultar<IUsuario>(query, params);
+        return resultado[0] || null;
+    }
+
     async buscarPorLogin(login: string): Promise<IUsuario | null> {
         const query = `
-            SELECT sequsuario, login, senha, nome,
-            loginAttempts, failedBlocks, lockUntil, status
-            FROM usuario
-            WHERE login = ?
+            SELECT sequsuario, login, senha, nome, email,
+                tentativas_login, nivel_bloqueio, bloqueado_ate, status
+            FROM usuario WHERE login = ?
         `;
 
         const resultado = await db.consultar<IUsuario>(query, [login]);
         return resultado[0] || null;
     }
 
-    async criarUsuario(login: string, senha: string, nome: string) {
-        const hash = await bcrypt.hash(senha, 10);
+    async criarUsuario(dados: ICadastrarUsuario) {
+        const { login, senha, nome, email } = dados;
         const query = `
-            INSERT INTO usuario (login, senha, nome, loginAttempts, failedBlocks, lockUntil, status)
-            VALUES (?, ?, ?, 0, 0, NULL, 'active')
+            INSERT INTO usuario (login, senha, nome, email, tentativas_login, nivel_bloqueio, bloqueado_ate, status)
+            VALUES (?, ?, ?, ?, 0, 0, NULL, 'active')
         `;
 
-        const parametros = [login, hash, nome];
+        const parametros = [login, senha, nome, email];
 
-        const resultado = await db.executar(query, parametros);
-        return resultado.lastID;
+        await db.executar(query, parametros);
+        return;
     }
 
     async validarSenha(senha: string, hash: string) {
@@ -37,22 +61,22 @@ export class UsuarioRepository {
 
     async atualizarTentativas(
         sequsuario: number,
-        data: Partial<Pick<IUsuario, 'loginAttempts' | 'failedBlocks' | 'lockUntil' | 'status'>>
+        data: Partial<Pick<IUsuario, 'tentativas_login' | 'nivel_bloqueio' | 'bloqueado_ate' | 'status'>>
     ): Promise<void> {
         const sets: string[] = [];
         const valores: any[] = [];
 
-        if (data.loginAttempts !== undefined) {
-            sets.push('loginAttempts = ?');
-            valores.push(data.loginAttempts);
+        if (data.tentativas_login !== undefined) {
+            sets.push('tentativas_login = ?');
+            valores.push(data.tentativas_login);
         }
-        if (data.failedBlocks !== undefined) {
-            sets.push('failedBlocks = ?');
-            valores.push(data.failedBlocks);
+        if (data.nivel_bloqueio !== undefined) {
+            sets.push('nivel_bloqueio = ?');
+            valores.push(data.nivel_bloqueio);
         }
-        if (data.lockUntil !== undefined) {
-            sets.push('lockUntil = ?');
-            valores.push(data.lockUntil);
+        if (data.bloqueado_ate !== undefined) {
+            sets.push('bloqueado_ate = ?');
+            valores.push(data.bloqueado_ate);
         }
         if (data.status !== undefined) {
             sets.push('status = ?');

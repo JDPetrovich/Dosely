@@ -1,57 +1,110 @@
 import { Request, Response } from "express";
-import { PacienteRepository } from "../../repository/paciente/paciente.repository.js";
+import { PacienteService } from "../../services/paciente/paciente.service.js";
+import { AppError } from "../../errors/app.error.js";
+import type { ICriarPaciente, IEditarPaciente, IPacienteBody } from "@dosely/shared";
 
-const pacienteRepo = new PacienteRepository();
+const pacienteService = new PacienteService();
 
-export const pacienteController = {
-    buscarTodos: async (req: Request, res: Response) => {
-        try {
-            const pacientes = await pacienteRepo.buscarPacientes();
-            res.status(200).json({ sucesso: true, dados: pacientes });
-        } catch (error) {
-            res.status(500).json({
-                sucesso: false,
-                mensagem: (error as Error).message,
-            });
+interface PacienteParams {
+    seqpaciente: string;
+}
+
+export class PacienteController {
+    async buscarTodosPacientes(req: Request, res: Response) {
+        const usuario = req.usuario
+
+        if (!usuario) {
+            throw new AppError(
+                "Usuário não autenticado",
+                401,
+                "UNAUTHENTICATED"
+            )
         }
-    },
 
-    criar: async (req: Request, res: Response) => {
-        try {
-            await pacienteRepo.criarPaciente(req.body);
-            res.status(201).json({
-                sucesso: true,
-                mensagem: "Paciente criado com sucesso!",
-            });
-        } catch (error) {
-            res.status(500).json({
-                sucesso: false,
-                mensagem: (error as Error).message,
-            });
+        const pacientes = await pacienteService.buscarPacientes(usuario.id);
+        res.status(200).json({ sucesso: true, dados: pacientes });
+    }
+
+    async criarPaciente(req: Request<{}, {}, IPacienteBody>, res: Response) {
+        const usuario = req.usuario
+
+        if (!usuario) {
+            throw new AppError(
+                "Usuário não autenticado",
+                401,
+                "UNAUTHENTICATED"
+            )
         }
-    },
 
-    atualizar: async (req: Request, res: Response) => {
-        try {
-            await pacienteRepo.atualizarPaciente(req.body);
-            res.status(200).json({
-                sucesso: true,
-                mensagem: "Paciente atualizado com sucesso!",
-            });
-        } catch (error) {
-            res.status(500).json({
-                sucesso: false,
-                mensagem: (error as Error).message,
-            });
+        const dados: ICriarPaciente = {
+            ...req.body,
+            sequsuario: usuario.id
         }
-    },
 
-    deletar: async (req: Request, res: Response) => {
+        await pacienteService.criarPaciente(dados);
+        res.status(201).json({
+            sucesso: true,
+            mensagem: "Paciente criado com sucesso!",
+        });
+
+    }
+
+    async atualizarPaciente(req: Request<PacienteParams, {}, IPacienteBody>, res: Response) {
+        const seqpaciente = Number(req.params.seqpaciente);
+        const usuario = req.usuario
+
+        if (!usuario) {
+            throw new AppError(
+                "Usuário não autenticado",
+                401,
+                "UNAUTHENTICATED"
+            )
+        }
+
+        if (!Number.isInteger(seqpaciente) || seqpaciente <= 0) {
+            throw new AppError(
+                "O identificador do paciente é inválido.",
+                400,
+                "INVALID_PATIENT_ID"
+            );
+        }
+
+        const dados: IEditarPaciente = {
+            ...req.body,
+            sequsuario: usuario.id,
+            seqpaciente
+        }
+
+        await pacienteService.atualizarPaciente(dados);
+        res.status(200).json({
+            sucesso: true,
+            mensagem: "Paciente atualizado com sucesso!",
+        });
+
+    }
+
+    async deletarPaciente(req: Request<PacienteParams>, res: Response) {
         try {
-            let seqpaciente = req.params.id
-            let codpaciente = req.body.codpaciente
+            const seqpaciente = Number(req.params.seqpaciente);
+            const usuario = req.usuario;
 
-            await pacienteRepo.deletarPaciente(Number(seqpaciente), codpaciente);
+            if (!usuario) {
+                throw new AppError(
+                    "Usuário não autenticado.",
+                    401,
+                    "UNAUTHENTICATED"
+                )
+            }
+
+            if (!Number.isInteger(seqpaciente) || seqpaciente <= 0) {
+                throw new AppError(
+                    "O identificador do paciente é inválido.",
+                    400,
+                    "INVALID_PATIENT_ID"
+                );
+            }
+
+            await pacienteService.deletarPaciente(usuario.id, seqpaciente);
 
             res.status(200).json({
                 sucesso: true,
@@ -63,5 +116,5 @@ export const pacienteController = {
                 mensagem: (error as Error).message,
             });
         }
-    },
+    }
 };

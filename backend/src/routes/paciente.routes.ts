@@ -1,14 +1,20 @@
 import { Router } from "express";
-import { pacienteController } from "../controller/paciente/paciente.controller.js";
-import { verificarAuth } from "../middleware/auth.js";
+import { PacienteController } from "../controller/paciente/paciente.controller.js";
+import { TratamentoController } from "../controller/tratamento/tratamento.controller.js";
 
+const pacienteController = new PacienteController();
+const tratamentoController = new TratamentoController();
 const router = Router();
 
-router.use(verificarAuth);
+router.get("/pacientes", pacienteController.buscarTodosPacientes);
+router.post("/paciente", pacienteController.criarPaciente);
+router.put("/paciente/:seqpaciente", pacienteController.atualizarPaciente);
+router.delete("/paciente/:seqpaciente", pacienteController.deletarPaciente);
 
-router.get("/pacientes", pacienteController.buscarTodos);
-router.post("/paciente", pacienteController.criar);
-router.put("/paciente/:id", pacienteController.atualizar);
-router.delete("/paciente/:id", pacienteController.deletar);
+router.get("/paciente/:seqpaciente/tratamentos", tratamentoController.buscarTratamento);
+router.post("/paciente/:seqpaciente/tratamento", tratamentoController.criarTratamento);
+router.put("/paciente/:seqpaciente/tratamento/:seqtratamento", tratamentoController.atualizarTratamento);
+router.delete("/paciente/:seqpaciente/tratamento/:seqtratamento", tratamentoController.deletarTratamento);
+
 
 export default router;

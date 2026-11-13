@@ -12,14 +12,14 @@ import { formatarCPF } from "@/utils/formatar";
 
 type Props = {
   nome: string;
-  dtnascimentopaciente: string;
+  data_nascimento: string;
   cpf: string;
   onClick?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
 };
 
-export function PacienteCard({ nome, dtnascimentopaciente, cpf, onClick, onEdit, onDelete }: Props) {
+export function PacienteCard({ nome, data_nascimento, cpf, onClick, onEdit, onDelete }: Props) {
   return (
     <div
       onClick={onClick}
@@ -77,7 +77,7 @@ export function PacienteCard({ nome, dtnascimentopaciente, cpf, onClick, onEdit,
 
       <div className="pr-8">
         <p className="font-semibold text-slate-800 truncate">{nome}</p>
-        <p className="text-sm text-slate-500">Idade: {calcularIdade(dtnascimentopaciente)} anos</p>
+        <p className="text-sm text-slate-500">Idade: {calcularIdade(data_nascimento)} anos</p>
       </div>
 
       <p className="text-xs text-gray-400 truncate">{formatarCPF(cpf)}</p>

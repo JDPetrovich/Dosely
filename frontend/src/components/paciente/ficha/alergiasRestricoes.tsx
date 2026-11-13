@@ -5,9 +5,11 @@ import { AlertCircle, Settings } from "lucide-react";
 import type { AlergiaFormOutput } from "@/schema/paciente.schema";
 import { useEffect, useState } from "react";
 import { usePaciente } from "@/contexts/paciente.context";
+import { GerenciarAlergiasModal } from "./gerenciarAlergiasModal";
 
-export function AlergiasRestricoes({ onEdit }: { onEdit: () => void }) {
+export function AlergiasRestricoes() {
     const [alergiaspaciente, setAlergiaspaciente] = useState<AlergiaFormOutput[]>([]);
+    const [modalAberto, setModalAberto] = useState(false);
     const { paciente } = usePaciente();
 
     const carregarAlergiaspaciente = async (seqpaciente: number) => {
@@ -36,7 +38,7 @@ export function AlergiasRestricoes({ onEdit }: { onEdit: () => void }) {
                     <Button
                         variant="ghost"
                         size="sm"
-                        onClick={onEdit}
+                        onClick={() => setModalAberto(true)}
                         className="h-8 px-2 text-red-700 hover:text-red-900 hover:bg-red-100"
                     >
                         <Settings className="h-4 w-4" />
@@ -53,19 +55,25 @@ export function AlergiasRestricoes({ onEdit }: { onEdit: () => void }) {
                                 variant="destructive"
                                 className="cursor-default"
                             >
-                                {a.descalergia}
+                                {a.descricao}
                             </Badge>
                         ))}
                     </div>
                 ) : (
                     <div
-                        onClick={onEdit}
+                        onClick={() => setModalAberto(true)}
                         className="text-sm text-red-700 cursor-pointer hover:underline"
                     >
                         Nenhuma alergia cadastrada. Clique para gerenciar.
                     </div>
                 )}
             </CardContent>
+
+            <GerenciarAlergiasModal
+                open={modalAberto}
+                onOpenChange={setModalAberto}
+                onSaved={() => paciente?.seqpaciente && carregarAlergiaspaciente(paciente.seqpaciente)}
+            />
         </Card>
     );
 }

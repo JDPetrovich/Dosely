@@ -2,7 +2,7 @@ import rateLimit from "express-rate-limit";
 
 export const limiter = rateLimit({
     windowMs: 5 * 60 * 1000,
-    limit: 5,
+    limit: 10,
 
     message: {
         mensagem: "Muitas tentativas de login. Por favor, tente novamente mais tarde.",
